@@ -23,7 +23,7 @@ const App = () => {
     <AppShell
       header={{ height: 60 }}
       navbar={{
-        width: 300,
+        width: 200,
         breakpoint: "sm",
         collapsed: { mobile: !opened },
       }}
@@ -31,7 +31,6 @@ const App = () => {
     >
       <AppShell.Header>
         <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-        <div>Logo</div>
       </AppShell.Header>
       <AppShell.Navbar p="md">
         {data.map((item, index) => (

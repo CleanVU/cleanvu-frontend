@@ -7,6 +7,7 @@ import {
 } from "../interfaces/user.interface";
 import { RequestStatus, Request } from "../interfaces/request.interface";
 import { Location } from "../interfaces/location.interface";
+import { Building } from "../interfaces/building.interface";
 
 export const createTestAdmin = () => {
   return {
@@ -41,12 +42,24 @@ export const createTestRequest = (): Request => {
   return {
     _id: faker.string.uuid(),
     studentId: faker.string.uuid(),
-    details: faker.word.adjective + " " + faker.word.noun,
+    description: faker.lorem.paragraph(),
     initiatedAt: faker.date.past().toDateString(),
     status: randomRequestStatus() as RequestStatus,
     estimatedCompletion: faker.date.future().toDateString(),
+    building: createTestBuilding(),
     location: createTestLocation(),
   } as Request;
+};
+
+export const createTestBuilding = (): Building => {
+  return {
+    _id: faker.string.uuid(),
+    name: faker.word.words(2) + " hall",
+    locations: Array.from(
+      { length: faker.number.int({ min: 1, max: 5 }) },
+      () => createTestLocation(),
+    ),
+  } as Building;
 };
 
 export const createTestLocation = (): Location | string => {
@@ -56,7 +69,7 @@ export const createTestLocation = (): Location | string => {
     roomDescription: faker.location.ordinalDirection(),
     floor: faker.number.int({ min: 1, max: 6 }),
     lastCleaned: faker.date.past(),
-    requests: [createTestRequest(), createTestRequest(), createTestRequest()],
+    requests: [faker.string.uuid(), faker.string.uuid(), faker.string.uuid()],
   } as Location;
 };
 
