@@ -7,9 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const theme = createTheme({
   fontFamily: "Roboto, sans-serif",
-  colors: {
-    
-  },
+  colors: {},
 });
 
 const queryClient = new QueryClient();

@@ -4,25 +4,25 @@ import type { TabOptions } from "../interfaces/user.interface";
 
 // Navigation context types
 interface NavigationContextType {
-    currentTab: TabOptions | null;
-    setCurrentTab: (_: TabOptions | null) => void;
+  currentTab: TabOptions | null;
+  setCurrentTab: (_: TabOptions | null) => void;
 }
 
 // Create the context for the Navigation
 const NavigationContext = createContext<NavigationContextType>({
-    currentTab: null,
-    setCurrentTab: (_: TabOptions | null) => {},
+  currentTab: null,
+  setCurrentTab: (_: TabOptions | null) => {},
 });
 
 // Create the provider for the Navigation context
 export const NavigationProvider = ({ children }: PropsWithChildren) => {
-    const [currentTab, setCurrentTab] = useState<TabOptions | null>(null);
+  const [currentTab, setCurrentTab] = useState<TabOptions | null>(null);
 
-    return (
-        <NavigationContext.Provider value={{ currentTab, setCurrentTab }}>
-            {children}
-        </NavigationContext.Provider>
-    );
+  return (
+    <NavigationContext.Provider value={{ currentTab, setCurrentTab }}>
+      {children}
+    </NavigationContext.Provider>
+  );
 };
 
 /**
@@ -33,10 +33,11 @@ export const NavigationProvider = ({ children }: PropsWithChildren) => {
  * const { currentTab, setCurrentTab } = useNavigationContext();
  */
 export const useNavigationContext = () => {
-    const context = useContext(NavigationContext);
-    if (context === undefined) {
-        throw new Error("useNavigationProvider must be used within a NavigationProvider");
-    }
-    return context;
-}
-
+  const context = useContext(NavigationContext);
+  if (context === undefined) {
+    throw new Error(
+      "useNavigationProvider must be used within a NavigationProvider",
+    );
+  }
+  return context;
+};
