@@ -34,10 +34,12 @@ export const NavigationProvider = ({ children }: PropsWithChildren) => {
  */
 export const useNavigationContext = () => {
   const context = useContext(NavigationContext);
+
   if (context === undefined) {
     throw new Error(
       "useNavigationProvider must be used within a NavigationProvider",
     );
   }
+
   return context;
 };

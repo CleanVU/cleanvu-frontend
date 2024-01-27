@@ -5,7 +5,7 @@ import {
   RequestStatusColors,
 } from "../../../interfaces/request.interface";
 import { useEffect, useState } from "react";
-import RequestCard from "../../../components/RequestCard";
+import StudentRequestCard from "../../../components/StudentRequestCard";
 import { useNavigationContext } from "../../../context/navigation.context";
 import { StudentTabs } from "../../../interfaces/user.interface";
 
@@ -109,7 +109,7 @@ const StudentRequestsPage = () => {
           </Group>
         </Group>
         {sortedRequests.map((request) => (
-          <RequestCard request={request} />
+          <StudentRequestCard request={request} />
         ))}
       </Stack>
     </div>
