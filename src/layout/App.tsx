@@ -14,6 +14,9 @@ const App = () => {
     {
       label: "Requests",
     },
+    {
+      label: "CustodianRequests",
+    },
   ];
 
   const navigateToPage = (path: string) => {

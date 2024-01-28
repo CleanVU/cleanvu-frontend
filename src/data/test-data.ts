@@ -55,6 +55,9 @@ export const createTestBuilding = (): Building => {
   return {
     _id: faker.string.uuid(),
     name: faker.word.words(2) + " hall",
+    floors: Array.from({ length: faker.number.int({ min: 1, max: 3 }) }, () =>
+      faker.string.numeric(4),
+    ),
     locations: Array.from(
       { length: faker.number.int({ min: 1, max: 5 }) },
       () => createTestLocation(),
@@ -67,7 +70,7 @@ export const createTestLocation = (): Location | string => {
     building: faker.word.words(2) + " building",
     room: faker.string.numeric(4),
     roomDescription: faker.location.ordinalDirection(),
-    floor: faker.number.int({ min: 1, max: 6 }),
+    floor: faker.string.numeric(4),
     lastCleaned: faker.date.past(),
     requests: [faker.string.uuid(), faker.string.uuid(), faker.string.uuid()],
   } as Location;

@@ -1,13 +1,13 @@
 import { Text, Button, Group, Stack } from "@mantine/core";
-import { createTestRequest } from "../../../data/test-data";
+import { createTestRequest } from "../../data/test-data";
 import {
   RequestStatus,
   RequestStatusColors,
-} from "../../../interfaces/request.interface";
+} from "../../interfaces/request.interface";
 import { useEffect, useState } from "react";
-import StudentRequestCard from "../../../components/StudentRequestCard";
-import { useNavigationContext } from "../../../context/navigation.context";
-import { StudentTabs } from "../../../interfaces/user.interface";
+import { useNavigationContext } from "../../context/navigation.context";
+import { StudentTabs } from "../../interfaces/user.interface";
+import CustodianRequestCard from "../../components/CustodianRequestCard";
 
 const requests = [
   createTestRequest(),
@@ -17,7 +17,7 @@ const requests = [
   createTestRequest(),
 ];
 
-const StudentRequestsPage = () => {
+const CustodianRequestsPage = () => {
   const { setCurrentTab } = useNavigationContext();
   const [filterStatus, setFilterStatus] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
@@ -109,11 +109,11 @@ const StudentRequestsPage = () => {
           </Group>
         </Group>
         {sortedRequests.map((request) => (
-          <StudentRequestCard request={request} />
+          <CustodianRequestCard key={request._id} request={request} />
         ))}
       </Stack>
     </div>
   );
 };
 
-export default StudentRequestsPage;
+export default CustodianRequestsPage;
