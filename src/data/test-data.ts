@@ -67,6 +67,7 @@ export const createTestBuilding = (): Building => {
 
 export const createTestLocation = (): Location | string => {
   return {
+    _id: faker.string.uuid(),
     building: faker.word.words(2) + " building",
     room: faker.string.numeric(4),
     roomDescription: faker.location.ordinalDirection(),

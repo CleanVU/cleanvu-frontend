@@ -91,6 +91,7 @@ const StudentRequestCard = ({ request }: { request: Request }) => {
         <EditRequestModal
           opened={editRequestModalOpened}
           close={closeEditRequestModal}
+          request={request}
         />
       )}
       {deleteRequestModalOpened && (

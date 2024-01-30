@@ -18,8 +18,13 @@ const NavigationContext = createContext<NavigationContextType>({
 export const NavigationProvider = ({ children }: PropsWithChildren) => {
   const [currentTab, setCurrentTab] = useState<TabOptions | null>(null);
 
+  const value = {
+    currentTab,
+    setCurrentTab,
+  };
+
   return (
-    <NavigationContext.Provider value={{ currentTab, setCurrentTab }}>
+    <NavigationContext.Provider value={value}>
       {children}
     </NavigationContext.Provider>
   );
