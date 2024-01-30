@@ -12,6 +12,10 @@ interface RequestContextType {
   addRequest: (request: Request) => void;
   deleteRequest: (requestId: string) => void;
   updateRequest: (requestId: string, request: Request) => void;
+  setEstimatedCompletion: (
+    requestId: string,
+    estimatedCompletion: string,
+  ) => void;
 }
 
 // Create the context for the Request
@@ -22,6 +26,7 @@ const RequestContext = createContext<RequestContextType>({
   addRequest: (_: Request) => {},
   deleteRequest: (_: string) => {},
   updateRequest: (_: string, __: Request) => {},
+  setEstimatedCompletion: (_: string, __: string) => {},
 });
 
 // Create the provider for the Request context
@@ -34,14 +39,16 @@ export const RequestProvider = ({ children }: PropsWithChildren) => {
     requestId: string,
     requestStatus: RequestStatus,
   ) => {
-    setCurrentRequests((requests) => {
-      const requestIndex = requests.findIndex(
-        (request) => request._id === requestId,
-      );
-      const updatedRequests = [...requests];
-      updatedRequests[requestIndex].status = requestStatus;
-      return updatedRequests;
+    const newRequests = currentRequests?.map((request: Request) => {
+      if (request._id === requestId) {
+        return {
+          ...request,
+          status: requestStatus,
+        };
+      }
+      return request;
     });
+    setCurrentRequests(newRequests as Request[]);
   };
 
   const addRequest = (request: Request) => {
@@ -54,15 +61,30 @@ export const RequestProvider = ({ children }: PropsWithChildren) => {
     );
   };
 
-  const updateRequest = (requestId: string, request: Request) => {
-    setCurrentRequests((requests) => {
-      const requestIndex = requests.findIndex(
-        (request) => request._id === requestId,
-      );
-      const updatedRequests = [...requests];
-      updatedRequests[requestIndex] = request;
-      return updatedRequests;
+  const updateRequest = (requestId: string, updatedRequest: Request) => {
+    const newRequests = currentRequests?.map((req: Request) => {
+      if (req._id === requestId) {
+        return updatedRequest;
+      }
+      return req;
     });
+    setCurrentRequests(newRequests as Request[]);
+  };
+
+  const setEstimatedCompletion = (
+    requestId: string,
+    estimatedCompletion: string,
+  ) => {
+    const newRequests = currentRequests?.map((request: Request) => {
+      if (request._id === requestId) {
+        return {
+          ...request,
+          estimatedCompletion,
+        };
+      }
+      return request;
+    });
+    setCurrentRequests(newRequests as Request[]);
   };
 
   const value = {
@@ -72,6 +94,7 @@ export const RequestProvider = ({ children }: PropsWithChildren) => {
     addRequest,
     deleteRequest,
     updateRequest,
+    setEstimatedCompletion,
   };
 
   return (

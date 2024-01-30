@@ -98,6 +98,7 @@ const StudentRequestCard = ({ request }: { request: Request }) => {
         <DeleteRequestModal
           opened={deleteRequestModalOpened}
           close={closeDeleteRequestModal}
+          requestId={request._id}
         />
       )}
     </div>

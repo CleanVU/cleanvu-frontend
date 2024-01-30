@@ -31,11 +31,13 @@ const StudentRequestsPage = () => {
     : requests;
 
   const sortedRequests = [...filteredRequests].sort((a, b) => {
-    if (sortOrder === "asc") {
-      return a.initiatedAt > b.initiatedAt ? 1 : -1;
-    } else {
-      return a.initiatedAt < b.initiatedAt ? 1 : -1;
-    }
+    return sortOrder === "asc"
+      ? a.initiatedAt > b.initiatedAt
+        ? 1
+        : -1
+      : a.initiatedAt < b.initiatedAt
+        ? 1
+        : -1;
   });
 
   return (

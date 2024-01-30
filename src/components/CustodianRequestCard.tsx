@@ -16,6 +16,8 @@ import {
 } from "../interfaces/request.interface";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
+import AcceptRequestModal from "./AcceptRequestModal";
+import { useDisclosure } from "@mantine/hooks";
 
 /**
  * A card that displays a request
@@ -23,6 +25,11 @@ import { faCheck, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
  * @returns A card that displays a request
  */
 const CustodianRequestCard = ({ request }: { request: Request }) => {
+  const [
+    acceptRequestModalOpened,
+    { open: openAcceptRequestModal, close: closeAcceptRequestModal },
+  ] = useDisclosure(false);
+
   return (
     <div>
       <Card shadow="sm" padding="xl" radius="md" withBorder>
@@ -65,6 +72,7 @@ const CustodianRequestCard = ({ request }: { request: Request }) => {
                   variant="filled"
                   color={RequestStatusColors.ACCEPTED}
                   size="lg"
+                  onClick={openAcceptRequestModal}
                 >
                   <FontAwesomeIcon icon={faPlus} />
                 </ActionIcon>
@@ -89,6 +97,13 @@ const CustodianRequestCard = ({ request }: { request: Request }) => {
           </Group>
         </Card.Section>
       </Card>
+      {acceptRequestModalOpened && (
+        <AcceptRequestModal
+          opened={acceptRequestModalOpened}
+          close={closeAcceptRequestModal}
+          requestId={request._id}
+        />
+      )}
     </div>
   );
 };
