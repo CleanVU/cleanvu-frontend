@@ -38,7 +38,7 @@ const StudentRequestCard = ({ request }: { request: Request }) => {
           <Group justify="space-between" mt="md" mb="xs" ml="xs" mr="xs">
             <Text
               fw={500}
-            >{`${(request.building as Building).name}: Room ${(request.location as Location).room}`}</Text>
+            >{`${(request.building as Building).name}: ${(request.location as Location).description}`}</Text>
             <Badge
               color={
                 RequestStatusColors[
@@ -59,7 +59,7 @@ const StudentRequestCard = ({ request }: { request: Request }) => {
               <Accordion.Panel>
                 <Stack>
                   <Text>{`Details: ${request.description}`}</Text>
-                  <Text>{`Initiated: ${request.initiatedAt}`}</Text>
+                  <Text>{`Initiated: ${request.createdAt}`}</Text>
                   <Text>{`Estimated Completion: ${request.estimatedCompletion}`}</Text>
                 </Stack>
               </Accordion.Panel>

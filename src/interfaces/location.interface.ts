@@ -12,9 +12,11 @@ import { Request } from "./request.interface";
  */
 export interface Location {
   _id: string;
-  room: string;
-  roomDescription?: string;
+  name: string;
+  description?: string;
   floor: string;
   lastCleaned: Date;
-  requests: Request[] | string[];
+  requests: Request[];
+  createdAt: Date;
+  updatedAt: Date;
 }

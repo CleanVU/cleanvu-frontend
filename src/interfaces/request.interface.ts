@@ -17,11 +17,12 @@ export interface Request {
   _id: string;
   studentId: string;
   description: string;
-  initiatedAt: string;
   status: RequestStatus;
+  createdAt: Date;
+  updatedAt: Date;
   estimatedCompletion?: string;
-  building: Building | string;
   location: Location | string;
+  building: Building | string;
 }
 
 /**

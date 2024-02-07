@@ -13,4 +13,6 @@ export interface Building {
   name: string;
   floors: string[];
   locations: Location[];
+  createdAt: Date;
+  updatedAt: Date;
 }

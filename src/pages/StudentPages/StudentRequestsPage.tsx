@@ -1,6 +1,6 @@
 import { Text, Button, Group, Stack } from "@mantine/core";
-import { createTestRequest } from "../../data/test-data";
 import {
+  Request,
   RequestStatus,
   RequestStatusColors,
 } from "../../interfaces/request.interface";
@@ -8,34 +8,38 @@ import { useEffect, useState } from "react";
 import StudentRequestCard from "../../components/StudentRequestCard";
 import { useNavigationContext } from "../../context/navigation.context";
 import { StudentTabs } from "../../interfaces/user.interface";
-
-const requests = [
-  createTestRequest(),
-  createTestRequest(),
-  createTestRequest(),
-  createTestRequest(),
-  createTestRequest(),
-];
+import { useQuery } from "@tanstack/react-query";
+import { getRequests } from "../../api/api";
 
 const StudentRequestsPage = () => {
+  /************** State and Context **************/
   const { setCurrentTab } = useNavigationContext();
   const [filterStatus, setFilterStatus] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+
+  /************** Hooks **************/
+  const { data: requests, isLoading } = useQuery<Request[]>({
+    queryKey: ["requests"],
+    queryFn: () => getRequests(10, 1),
+  });
 
   useEffect(() => {
     setCurrentTab(StudentTabs.REQUESTS);
   }, []);
 
+  /************** Render **************/
+  if (isLoading || !requests) return <div>Loading...</div>;
+
   const filteredRequests = filterStatus
-    ? requests.filter((request) => request.status === filterStatus)
+    ? requests.filter((request: Request) => request.status === filterStatus)
     : requests;
 
   const sortedRequests = [...filteredRequests].sort((a, b) => {
     return sortOrder === "asc"
-      ? a.initiatedAt > b.initiatedAt
+      ? a.createdAt > b.createdAt
         ? 1
         : -1
-      : a.initiatedAt < b.initiatedAt
+      : a.createdAt < b.createdAt
         ? 1
         : -1;
   });
