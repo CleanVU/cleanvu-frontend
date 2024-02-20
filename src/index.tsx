@@ -8,7 +8,7 @@ import { NavigationProvider } from "./context/navigation.context.tsx";
 import { RequestProvider } from "./context/request.context.tsx";
 
 const theme = createTheme({
-  fontFamily: "Roboto, sans-serif",
+  fontFamily: "Poppins, sans-serif",
   colors: {},
 });
 

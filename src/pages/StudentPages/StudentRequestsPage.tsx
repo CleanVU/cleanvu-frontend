@@ -1,4 +1,4 @@
-import { Text, Button, Group, Stack, ActionIcon } from "@mantine/core";
+import { Text, Button, Group, Stack, Title, Divider } from "@mantine/core";
 import {
   Request,
   RequestStatus,
@@ -66,26 +66,36 @@ const StudentRequestsPage = () => {
 
   return (
     <div>
-      <Group justify="space-between">
-        <Text size="lg" fw={500} mt="md" mb="sm">
-          Requests
-        </Text>
-        <ActionIcon
+      <Group justify="space-between" pb={10}>
+        <Group gap={10}>
+          <Title order={1}>{`Requests`}</Title>
+          <Text
+            style={{
+              fontSize: "1.5rem",
+              color: "gray",
+              paddingTop: "2px",
+            }}
+          >{`(${requests.length})`}</Text>
+        </Group>
+        <Button
           variant="filled"
           color="blue"
-          size="lg"
           onClick={() => setAddRequestOpen(true)}
         >
-          <FontAwesomeIcon icon={faPlus} />
-        </ActionIcon>
+          <Group gap={10}>
+            <Text fw={600}>Add Request</Text>
+            <FontAwesomeIcon icon={faPlus} />
+          </Group>
+        </Button>
       </Group>
+      <Divider />
       <Stack>
         <Group mt="md" mb="md" justify="space-between">
           <Group>
             <Text>Filter by Status:</Text>
             <Button
               variant="filled"
-              color="purple"
+              color={filterStatus === null ? "black" : "grey"}
               size="xs"
               onClick={() => setFilterStatus(null)}
             >
@@ -93,7 +103,11 @@ const StudentRequestsPage = () => {
             </Button>
             <Button
               variant="filled"
-              color={RequestStatusColors.REQUESTED}
+              color={
+                filterStatus === RequestStatus.REQUESTED
+                  ? RequestStatusColors.REQUESTED
+                  : "grey"
+              }
               size="xs"
               onClick={() => setFilterStatus(RequestStatus.REQUESTED)}
             >
@@ -101,7 +115,11 @@ const StudentRequestsPage = () => {
             </Button>
             <Button
               variant="filled"
-              color={RequestStatusColors.ACCEPTED}
+              color={
+                filterStatus === RequestStatus.ACCEPTED
+                  ? RequestStatusColors.ACCEPTED
+                  : "grey"
+              }
               size="xs"
               onClick={() => setFilterStatus(RequestStatus.ACCEPTED)}
             >
@@ -109,7 +127,11 @@ const StudentRequestsPage = () => {
             </Button>
             <Button
               variant="filled"
-              color={RequestStatusColors.COMPLETED}
+              color={
+                filterStatus === RequestStatus.COMPLETED
+                  ? RequestStatusColors.COMPLETED
+                  : "grey"
+              }
               size="xs"
               onClick={() => setFilterStatus(RequestStatus.COMPLETED)}
             >
@@ -117,7 +139,11 @@ const StudentRequestsPage = () => {
             </Button>
             <Button
               variant="filled"
-              color={RequestStatusColors.DENIED}
+              color={
+                filterStatus === RequestStatus.DENIED
+                  ? RequestStatusColors.DENIED
+                  : "grey"
+              }
               size="xs"
               onClick={() => setFilterStatus(RequestStatus.DENIED)}
             >
@@ -149,7 +175,11 @@ const StudentRequestsPage = () => {
         ))}
       </Stack>
       {addRequestOpen && (
-        <AddRequestModal opened={addRequestOpen} close={() => setAddRequestOpen(false)} studentId="65bd4b12088bf10ee6612e4b" />
+        <AddRequestModal
+          opened={addRequestOpen}
+          close={() => setAddRequestOpen(false)}
+          studentId="65bd4b12088bf10ee6612e4b"
+        />
       )}
     </div>
   );
