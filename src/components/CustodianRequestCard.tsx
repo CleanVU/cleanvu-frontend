@@ -37,7 +37,7 @@ const CustodianRequestCard = ({ request }: { request: Request }) => {
           <Group justify="space-between" mt="md" mb="xs" ml="xs" mr="xs">
             <Text
               fw={500}
-            >{`${(request.building as Building).name}: Room ${(request.location as Location).room}`}</Text>
+            >{`${(request.building as Building).name}: Room ${(request.location as Location).name}`}</Text>
             <Badge
               color={
                 RequestStatusColors[
@@ -58,7 +58,7 @@ const CustodianRequestCard = ({ request }: { request: Request }) => {
               <Accordion.Panel>
                 <Stack>
                   <Text>{`Details: ${request.description}`}</Text>
-                  <Text>{`Initiated: ${request.initiatedAt}`}</Text>
+                  <Text>{`Initiated: ${request.createdAt}`}</Text>
                 </Stack>
               </Accordion.Panel>
             </Accordion.Item>
@@ -101,7 +101,7 @@ const CustodianRequestCard = ({ request }: { request: Request }) => {
         <AcceptRequestModal
           opened={acceptRequestModalOpened}
           close={closeAcceptRequestModal}
-          requestId={request._id}
+          request={request}
         />
       )}
     </div>

@@ -1,4 +1,4 @@
-import { Text, Button, Group, Stack } from "@mantine/core";
+import { Text, Button, Group, Stack, ActionIcon } from "@mantine/core";
 import {
   Request,
   RequestStatus,
@@ -10,15 +10,25 @@ import { useNavigationContext } from "../../context/navigation.context";
 import { StudentTabs } from "../../interfaces/user.interface";
 import { useQuery } from "@tanstack/react-query";
 import { getRequests } from "../../api/api";
+import { useRequestContext } from "../../context/request.context";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import AddRequestModal from "../../components/AddRequestModal";
 
 const StudentRequestsPage = () => {
   /************** State and Context **************/
+  const { currentRequests, setCurrentRequests } = useRequestContext();
   const { setCurrentTab } = useNavigationContext();
   const [filterStatus, setFilterStatus] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [addRequestOpen, setAddRequestOpen] = useState(false);
 
   /************** Hooks **************/
-  const { data: requests, isLoading } = useQuery<Request[]>({
+  const {
+    data: requests,
+    isLoading,
+    status,
+  } = useQuery<Request[]>({
     queryKey: ["requests"],
     queryFn: () => getRequests(10, 1),
   });
@@ -27,28 +37,48 @@ const StudentRequestsPage = () => {
     setCurrentTab(StudentTabs.REQUESTS);
   }, []);
 
+  useEffect(() => {
+    if (status === "success" && requests) {
+      setCurrentRequests(requests);
+    }
+  }, [status]);
+
   /************** Render **************/
   if (isLoading || !requests) return <div>Loading...</div>;
 
   const filteredRequests = filterStatus
-    ? requests.filter((request: Request) => request.status === filterStatus)
-    : requests;
+    ? currentRequests?.filter(
+        (request: Request) => request.status === filterStatus,
+      )
+    : currentRequests;
 
-  const sortedRequests = [...filteredRequests].sort((a, b) => {
-    return sortOrder === "asc"
-      ? a.createdAt > b.createdAt
-        ? 1
-        : -1
-      : a.createdAt < b.createdAt
-        ? 1
-        : -1;
-  });
+  const sortedRequests = filteredRequests
+    ? [...filteredRequests].sort((a, b) => {
+        return sortOrder === "asc"
+          ? a.createdAt > b.createdAt
+            ? 1
+            : -1
+          : a.createdAt < b.createdAt
+            ? 1
+            : -1;
+      })
+    : [];
 
   return (
     <div>
-      <Text size="lg" fw={500} mt="md" mb="sm">
-        Requests
-      </Text>
+      <Group justify="space-between">
+        <Text size="lg" fw={500} mt="md" mb="sm">
+          Requests
+        </Text>
+        <ActionIcon
+          variant="filled"
+          color="blue"
+          size="lg"
+          onClick={() => setAddRequestOpen(true)}
+        >
+          <FontAwesomeIcon icon={faPlus} />
+        </ActionIcon>
+      </Group>
       <Stack>
         <Group mt="md" mb="md" justify="space-between">
           <Group>
@@ -118,6 +148,9 @@ const StudentRequestsPage = () => {
           <StudentRequestCard key={request._id} request={request} />
         ))}
       </Stack>
+      {addRequestOpen && (
+        <AddRequestModal opened={addRequestOpen} close={() => setAddRequestOpen(false)} studentId="65bd4b12088bf10ee6612e4b" />
+      )}
     </div>
   );
 };

@@ -1,5 +1,8 @@
 import { Group, Modal, Stack, Text, Button } from "@mantine/core";
 import { useRequestContext } from "../context/request.context";
+import { useMutation } from "@tanstack/react-query";
+import { deleteRequest } from "../api/api";
+import { Request } from "../interfaces/request.interface";
 
 interface DeleteRequestModalProps {
   opened: boolean;
@@ -12,12 +15,23 @@ const DeleteRequestModal = ({
   close,
   requestId,
 }: DeleteRequestModalProps) => {
-  const { deleteRequest } = useRequestContext();
+  /************** Context **************/
+  const { deleteRequestContext } = useRequestContext();
 
+  /************** Hooks **************/
+  const { isPending: isDeleting } = useMutation<Request>({
+    mutationKey: ["requests"],
+    mutationFn: () => deleteRequest(requestId),
+  });
+
+  /************** Event Handlers **************/
   const onModalSubmit = () => {
-    deleteRequest(requestId);
+    deleteRequestContext(requestId);
     close();
   };
+
+  /************** Render **************/
+  if (isDeleting) return <div>Deleting...</div>;
 
   return (
     <Modal

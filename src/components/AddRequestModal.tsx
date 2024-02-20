@@ -1,34 +1,32 @@
-import { Button, Modal, Select, Stack, Text, Textarea } from "@mantine/core";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { useState } from "react";
+import { createRequest, getBuildings, getLocations } from "../api/api";
 import { useRequestContext } from "../context/request.context";
-import { Request, RequestStatus } from "../interfaces/request.interface";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { getBuildings, getLocations, updateRequest } from "../api/api";
 import { Building } from "../interfaces/building.interface";
 import { Location } from "../interfaces/location.interface";
+import { Request, RequestStatus } from "../interfaces/request.interface";
+import { Button, Modal, Select, Stack, Textarea, Text } from "@mantine/core";
 
-interface EditRequestModalProps {
+interface AddRequestModalProps {
   opened: boolean;
   close: () => void;
-  request: Request;
+  studentId: string;
 }
-const EditRequestModal = ({
+const AddRequestModal = ({
   opened,
   close,
-  request,
-}: EditRequestModalProps) => {
+  studentId,
+}: AddRequestModalProps) => {
   /************** State and Context **************/
-  const { updateRequestContext } = useRequestContext();
+  const { addRequestContext } = useRequestContext();
   const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(
-    request.building as Building,
+    null,
   );
-  const [selectedFloor, setSelectedFloor] = useState<string | null>(
-    (request.location as Location).floor,
-  );
+  const [selectedFloor, setSelectedFloor] = useState<string | null>(null);
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(
-    request.location as Location,
+    null,
   );
-  const [description, setDescription] = useState<string>(request.description);
+  const [description, setDescription] = useState<string>("");
 
   /************** Hooks **************/
   const { data: buildings, isLoading: isLoadingBuildings } = useQuery<
@@ -45,13 +43,13 @@ const EditRequestModal = ({
     queryFn: () => getLocations(10, 1),
   });
 
-  const updateRequestMutation = useMutation<Request>({
+  const createRequestMutation = useMutation<Request>({
     mutationKey: ["requests"],
     mutationFn: () =>
-      updateRequest(request._id, {
-        studentId: request.studentId,
+      createRequest({
+        studentId: studentId,
         description: description,
-        status: request.status,
+        status: RequestStatus.REQUESTED,
         locationId: selectedLocation?._id || "",
         buildingId: selectedBuilding?._id || "",
       }),
@@ -61,21 +59,19 @@ const EditRequestModal = ({
   const handleBuildingChange = (value: string) => {
     const building = buildings?.find((building) => building._id === value);
     setSelectedBuilding(building || null);
-    setSelectedFloor(null);
     setSelectedLocation(null);
-    setDescription("");
+    setSelectedFloor(null);
   };
 
   const handleFloorChange = (value: string) => {
     setSelectedFloor(value);
     setSelectedLocation(null);
-    setDescription("");
   };
 
   const handleLocationChange = (value: string) => {
     const location = locations?.find((location) => location._id === value);
     setSelectedLocation(location || null);
-    setDescription("");
+    setSelectedFloor(location?.floor || null);
   };
 
   const handleDescriptionChange = (value: string) => {
@@ -83,18 +79,15 @@ const EditRequestModal = ({
   };
 
   const onModalSubmit = () => {
-    if (selectedBuilding && selectedFloor && selectedLocation && description) {
-      updateRequestMutation.mutate();
-      updateRequestContext(request._id, {
-        ...request,
-        building: selectedBuilding,
-        location: selectedLocation,
-        description: description,
-        status: RequestStatus.REQUESTED,
-        updatedAt: new Date(),
-      } as Request);
-      close();
-    }
+    createRequestMutation.mutate();
+    addRequestContext({
+      studentId: studentId,
+      description: description,
+      status: RequestStatus.REQUESTED,
+      location: selectedLocation,
+      building: selectedBuilding,
+    } as Request);
+    close();
   };
 
   /************** Data Processing for Select **************/
@@ -181,4 +174,4 @@ const EditRequestModal = ({
   );
 };
 
-export default EditRequestModal;
+export default AddRequestModal;

@@ -1,32 +1,22 @@
 import { PropsWithChildren, createContext, useContext, useState } from "react";
-import { Request, RequestStatus } from "../interfaces/request.interface";
+import { Request } from "../interfaces/request.interface";
 
 // Request context types
 interface RequestContextType {
   currentRequests: Request[] | null;
   setCurrentRequests: (requests: Request[]) => void;
-  updateRequestStatus: (
-    requestId: string,
-    requestStatus: RequestStatus,
-  ) => void;
-  addRequest: (request: Request) => void;
-  deleteRequest: (requestId: string) => void;
-  updateRequest: (requestId: string, request: Request) => void;
-  setEstimatedCompletion: (
-    requestId: string,
-    estimatedCompletion: string,
-  ) => void;
+  addRequestContext: (request: Request) => void;
+  deleteRequestContext: (requestId: string) => void;
+  updateRequestContext: (requestId: string, request: Request) => void;
 }
 
 // Create the context for the Request
 const RequestContext = createContext<RequestContextType>({
   currentRequests: null,
   setCurrentRequests: (_: Request[]) => {},
-  updateRequestStatus: (_: string, __: RequestStatus) => {},
-  addRequest: (_: Request) => {},
-  deleteRequest: (_: string) => {},
-  updateRequest: (_: string, __: Request) => {},
-  setEstimatedCompletion: (_: string, __: string) => {},
+  addRequestContext: (_: Request) => {},
+  deleteRequestContext: (_: string) => {},
+  updateRequestContext: (_: string, __: Request) => {},
 });
 
 // Create the provider for the Request context
@@ -35,66 +25,35 @@ export const RequestProvider = ({ children }: PropsWithChildren) => {
     [] as Request[],
   );
 
-  const updateRequestStatus = (
-    requestId: string,
-    requestStatus: RequestStatus,
-  ) => {
-    const newRequests = currentRequests?.map((request: Request) => {
-      if (request._id === requestId) {
-        return {
-          ...request,
-          status: requestStatus,
-        };
-      }
-      return request;
-    });
-    setCurrentRequests(newRequests as Request[]);
-  };
-
-  const addRequest = (request: Request) => {
+  const addRequestContext = (request: Request) => {
     setCurrentRequests((requests) => [...requests, request]);
   };
 
-  const deleteRequest = (requestId: string) => {
+  const deleteRequestContext = (requestId: string) => {
     setCurrentRequests((requests) =>
       requests.filter((request) => request._id !== requestId),
     );
   };
 
-  const updateRequest = (requestId: string, updatedRequest: Request) => {
+  const updateRequestContext = (requestId: string, updatedRequest: Request) => {
+    console.log("updateRequestContext", requestId, updatedRequest);
     const newRequests = currentRequests?.map((req: Request) => {
       if (req._id === requestId) {
         return updatedRequest;
+      } else {
+        return req;
       }
-      return req;
     });
     setCurrentRequests(newRequests as Request[]);
-  };
-
-  const setEstimatedCompletion = (
-    requestId: string,
-    estimatedCompletion: string,
-  ) => {
-    const newRequests = currentRequests?.map((request: Request) => {
-      if (request._id === requestId) {
-        return {
-          ...request,
-          estimatedCompletion,
-        };
-      }
-      return request;
-    });
-    setCurrentRequests(newRequests as Request[]);
+    console.log("newRequests", currentRequests);
   };
 
   const value = {
     currentRequests,
     setCurrentRequests,
-    updateRequestStatus,
-    addRequest,
-    deleteRequest,
-    updateRequest,
-    setEstimatedCompletion,
+    addRequestContext,
+    deleteRequestContext,
+    updateRequestContext,
   };
 
   return (

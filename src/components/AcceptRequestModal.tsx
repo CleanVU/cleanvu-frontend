@@ -1,33 +1,61 @@
 import { Group, Modal, Stack, Text, Button } from "@mantine/core";
 import { useRequestContext } from "../context/request.context";
 import {
+  Request,
   RequestStatus,
   RequestStatusColors,
 } from "../interfaces/request.interface";
+import { Location } from "../interfaces/location.interface";
+import { Building } from "../interfaces/building.interface";
 import { DateTimePicker } from "@mantine/dates";
 import { useState } from "react";
+import { updateRequest } from "../api/api";
+import { useMutation } from "@tanstack/react-query";
 
 interface AcceptRequestModalProps {
   opened: boolean;
   close: () => void;
-  requestId: string;
+  request: Request;
 }
 
 const AcceptRequestModal = ({
   opened,
   close,
-  requestId,
+  request,
 }: AcceptRequestModalProps) => {
-  const { updateRequestStatus, setEstimatedCompletion } = useRequestContext();
+  /************** State and Context **************/
+  const { updateRequestContext } = useRequestContext();
   const [estimate, setEstimate] = useState<Date | null>(null);
 
+  /************** Hooks **************/
+  const acceptRequestMutation = useMutation<Request>({
+    mutationKey: ["requests"],
+    mutationFn: () =>
+      updateRequest(request._id, {
+        studentId: request.studentId,
+        description: request.description,
+        status: RequestStatus.ACCEPTED,
+        locationId: (request.location as Location)._id,
+        buildingId: (request.building as Building)._id,
+      }),
+  });
+
+  /************** Event Handlers **************/
   const onModalSubmit = () => {
-    updateRequestStatus(requestId, RequestStatus.ACCEPTED);
     if (estimate) {
-      setEstimatedCompletion(requestId, estimate?.toISOString());
+      acceptRequestMutation.mutate();
+      updateRequestContext(request._id, {
+        ...request,
+        status: RequestStatus.ACCEPTED,
+        estimatedCompletion: estimate.toISOString(),
+      });
     }
     close();
   };
+
+  /************** Render **************/
+
+  if (acceptRequestMutation.isPending) return <div>Accepting...</div>;
 
   return (
     <Modal

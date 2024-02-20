@@ -1,42 +1,64 @@
 import { Text, Button, Group, Stack } from "@mantine/core";
-import { createTestRequest } from "../../data/test-data";
 import {
   RequestStatus,
   RequestStatusColors,
 } from "../../interfaces/request.interface";
 import { useEffect, useState } from "react";
 import { useNavigationContext } from "../../context/navigation.context";
-import { StudentTabs } from "../../interfaces/user.interface";
+import { CustodianTabs } from "../../interfaces/user.interface";
 import CustodianRequestCard from "../../components/CustodianRequestCard";
-
-const requests = [
-  createTestRequest(),
-  createTestRequest(),
-  createTestRequest(),
-  createTestRequest(),
-  createTestRequest(),
-];
+import { getRequests } from "../../api/api";
+import { useRequestContext } from "../../context/request.context";
+import { useQuery } from "@tanstack/react-query";
+import { Request } from "../../interfaces/request.interface";
 
 const CustodianRequestsPage = () => {
+  /************** State and Context **************/
+  const { currentRequests, setCurrentRequests } = useRequestContext();
   const { setCurrentTab } = useNavigationContext();
   const [filterStatus, setFilterStatus] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
+  /************** Hooks **************/
+  const {
+    data: requests,
+    isLoading,
+    status,
+  } = useQuery<Request[]>({
+    queryKey: ["requests"],
+    queryFn: () => getRequests(10, 1),
+  });
+
   useEffect(() => {
-    setCurrentTab(StudentTabs.REQUESTS);
+    setCurrentTab(CustodianTabs.REQUESTS);
   }, []);
 
-  const filteredRequests = filterStatus
-    ? requests.filter((request) => request.status === filterStatus)
-    : requests;
-
-  const sortedRequests = [...filteredRequests].sort((a, b) => {
-    if (sortOrder === "asc") {
-      return a.initiatedAt > b.initiatedAt ? 1 : -1;
-    } else {
-      return a.initiatedAt < b.initiatedAt ? 1 : -1;
+  useEffect(() => {
+    if (status === "success" && requests) {
+      setCurrentRequests(requests);
     }
-  });
+  }, [status]);
+
+  /************** Render **************/
+  if (isLoading || !requests) return <div>Loading...</div>;
+
+  const filteredRequests = filterStatus
+    ? currentRequests?.filter(
+        (request: Request) => request.status === filterStatus,
+      )
+    : currentRequests;
+
+  const sortedRequests = filteredRequests
+    ? [...filteredRequests].sort((a, b) => {
+        return sortOrder === "asc"
+          ? a.createdAt > b.createdAt
+            ? 1
+            : -1
+          : a.createdAt < b.createdAt
+            ? 1
+            : -1;
+      })
+    : [];
 
   return (
     <div>
