@@ -4,18 +4,32 @@ import Router from "./router/router.tsx";
 import "@mantine/core/styles.css";
 import { createTheme, MantineProvider } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { NavigationProvider } from "./context/navigation.context.tsx";
+import { RequestProvider } from "./context/request.context.tsx";
 
 const theme = createTheme({
-  /** mantine theme override here */
+  fontFamily: "Roboto, sans-serif",
+  colors: {},
 });
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: false,
+    },
+  },
+});
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <MantineProvider theme={theme}>
-        <Router />
+        <NavigationProvider>
+          <RequestProvider>
+            <Router />
+          </RequestProvider>
+        </NavigationProvider>
       </MantineProvider>
     </QueryClientProvider>
   </React.StrictMode>,
