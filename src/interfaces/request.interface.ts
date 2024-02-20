@@ -34,6 +34,7 @@ export interface Request {
  * @param {string} DENIED - The denied status
  */
 export enum RequestStatus {
+  ALL = "all",
   REQUESTED = "requested",
   ACCEPTED = "accepted",
   COMPLETED = "completed",
@@ -49,8 +50,10 @@ export enum RequestStatus {
  * @param {string} DENIED - The denied status color
  */
 export enum RequestStatusColors {
+  ALL = "grey",
   REQUESTED = "blue",
-  ACCEPTED = "yellow",
+  // sort light yell
+  ACCEPTED = "#F6E327",
   COMPLETED = "green",
   DENIED = "red",
 }

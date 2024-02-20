@@ -1,4 +1,12 @@
-import { Text, Button, Group, Stack, Title, Divider } from "@mantine/core";
+import {
+  Text,
+  Button,
+  Group,
+  Stack,
+  Title,
+  Divider,
+  SegmentedControl,
+} from "@mantine/core";
 import {
   Request,
   RequestStatus,
@@ -19,7 +27,9 @@ const StudentRequestsPage = () => {
   /************** State and Context **************/
   const { currentRequests, setCurrentRequests } = useRequestContext();
   const { setCurrentTab } = useNavigationContext();
-  const [filterStatus, setFilterStatus] = useState<string | null>(null);
+  const [filterStatus, setFilterStatus] = useState<string | undefined>(
+    RequestStatus.ALL,
+  );
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [addRequestOpen, setAddRequestOpen] = useState(false);
 
@@ -46,11 +56,12 @@ const StudentRequestsPage = () => {
   /************** Render **************/
   if (isLoading || !requests) return <div>Loading...</div>;
 
-  const filteredRequests = filterStatus
-    ? currentRequests?.filter(
-        (request: Request) => request.status === filterStatus,
-      )
-    : currentRequests;
+  const filteredRequests =
+    filterStatus !== RequestStatus.ALL
+      ? currentRequests?.filter(
+          (request: Request) => request.status === filterStatus,
+        )
+      : currentRequests;
 
   const sortedRequests = filteredRequests
     ? [...filteredRequests].sort((a, b) => {
@@ -91,65 +102,26 @@ const StudentRequestsPage = () => {
       <Divider />
       <Stack>
         <Group mt="md" mb="md" justify="space-between">
-          <Group>
-            <Text>Filter by Status:</Text>
-            <Button
-              variant="filled"
-              color={filterStatus === null ? "black" : "grey"}
-              size="xs"
-              onClick={() => setFilterStatus(null)}
-            >
-              ALL
-            </Button>
-            <Button
-              variant="filled"
-              color={
-                filterStatus === RequestStatus.REQUESTED
-                  ? RequestStatusColors.REQUESTED
-                  : "grey"
-              }
-              size="xs"
-              onClick={() => setFilterStatus(RequestStatus.REQUESTED)}
-            >
-              {RequestStatus.REQUESTED.toLocaleUpperCase()}
-            </Button>
-            <Button
-              variant="filled"
-              color={
-                filterStatus === RequestStatus.ACCEPTED
-                  ? RequestStatusColors.ACCEPTED
-                  : "grey"
-              }
-              size="xs"
-              onClick={() => setFilterStatus(RequestStatus.ACCEPTED)}
-            >
-              {RequestStatus.ACCEPTED.toLocaleUpperCase()}
-            </Button>
-            <Button
-              variant="filled"
-              color={
-                filterStatus === RequestStatus.COMPLETED
-                  ? RequestStatusColors.COMPLETED
-                  : "grey"
-              }
-              size="xs"
-              onClick={() => setFilterStatus(RequestStatus.COMPLETED)}
-            >
-              {RequestStatus.COMPLETED.toLocaleUpperCase()}
-            </Button>
-            <Button
-              variant="filled"
-              color={
-                filterStatus === RequestStatus.DENIED
-                  ? RequestStatusColors.DENIED
-                  : "grey"
-              }
-              size="xs"
-              onClick={() => setFilterStatus(RequestStatus.DENIED)}
-            >
-              {RequestStatus.DENIED.toLocaleUpperCase()}
-            </Button>
-          </Group>
+          <SegmentedControl
+            data={[
+              { value: "all", label: "All" },
+              { value: "requested", label: "Requested" },
+              { value: "accepted", label: "Accepted" },
+              { value: "completed", label: "Completed" },
+              { value: "denied", label: "Denied" },
+            ]}
+            value={filterStatus}
+            onChange={(value) => setFilterStatus(value)}
+            style={{
+              backgroundColor: "white",
+            }}
+            color={
+              RequestStatusColors[
+                filterStatus?.toUpperCase() as keyof typeof RequestStatusColors
+              ]
+            }
+          />
+
           <Group>
             <Text>Sort by Date:</Text>
             <Button
