@@ -1,3 +1,4 @@
+import { UserButton } from "@clerk/clerk-react";
 import { faBroom, faEnvelope, faHome } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AppShell, Burger, Group, NavLink, Title, Text } from "@mantine/core";
@@ -106,6 +107,7 @@ const App = () => {
             }}
           />
         ))}
+        <UserButton />
       </AppShell.Navbar>
       <AppShell.Main>
         <Outlet />
