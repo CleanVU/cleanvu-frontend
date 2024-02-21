@@ -85,7 +85,12 @@ const App = () => {
             active={index === active}
             label={
               <Group>
-                <FontAwesomeIcon icon={item.icon} />
+                <FontAwesomeIcon
+                  icon={item.icon}
+                  style={{
+                    paddingBottom: "2px",
+                  }}
+                />
                 <Title order={6} fw={600}>
                   {item.label}
                 </Title>
@@ -96,6 +101,9 @@ const App = () => {
               navigateToPage(item.link);
             }}
             fw={600}
+            style={{
+              borderRadius: 10,
+            }}
           />
         ))}
       </AppShell.Navbar>
