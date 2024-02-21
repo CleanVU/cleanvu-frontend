@@ -37,6 +37,7 @@ const AcceptRequestModal = ({
         status: RequestStatus.ACCEPTED,
         locationId: (request.location as Location)._id,
         buildingId: (request.building as Building)._id,
+        estimatedCompletion: estimate?.toISOString() || "",
       }),
   });
 

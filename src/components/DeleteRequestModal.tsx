@@ -19,7 +19,7 @@ const DeleteRequestModal = ({
   const { deleteRequestContext } = useRequestContext();
 
   /************** Hooks **************/
-  const { isPending: isDeleting } = useMutation<Request>({
+  const deleteRequestMutation = useMutation<Request>({
     mutationKey: ["requests"],
     mutationFn: () => deleteRequest(requestId),
   });
@@ -27,12 +27,11 @@ const DeleteRequestModal = ({
   /************** Event Handlers **************/
   const onModalSubmit = () => {
     deleteRequestContext(requestId);
+    deleteRequestMutation.mutate();
     close();
   };
 
   /************** Render **************/
-  if (isDeleting) return <div>Deleting...</div>;
-
   return (
     <Modal
       opened={opened}

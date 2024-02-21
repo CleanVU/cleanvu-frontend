@@ -86,6 +86,12 @@ const StudentRequestCard = ({ request }: { request: Request }) => {
                     <Text fw={600}>{`Initiated: `}</Text>
                     <Text>{`${new Date(request.createdAt).toLocaleString()}`}</Text>
                   </Group>
+                  {request.updatedAt && (
+                    <Group>
+                      <Text fw={600}>{`Last Updated: `}</Text>
+                      <Text>{`${new Date(request.updatedAt).toLocaleString()}`}</Text>
+                    </Group>
+                  )}
                   {request.estimatedCompletion && (
                     <Group>
                       <Text fw={600}>{`Estimated Completion: `}</Text>

@@ -42,7 +42,7 @@ export const getRequests = (count: number, page: number): Promise<Request[]> =>
  * @returns a promise that resolves to the deleted request
  */
 export const deleteRequest = (id: string): Promise<Request> =>
-  axios.delete(`${url}/api/requests/${id}`).then((res) => res.data);
+  axios.delete(`${url}/api/request/${id}`).then((res) => res.data);
 
 /**
  * Update Request
@@ -59,6 +59,7 @@ export const updateRequest = (
     status: string;
     locationId: string;
     buildingId: string;
+    estimatedCompletion: string;
   },
 ): Promise<Request> =>
   axios.put(`${url}/api/request/${id}`, request).then((res) => res.data);

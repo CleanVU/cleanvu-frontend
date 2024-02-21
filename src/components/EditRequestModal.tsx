@@ -51,9 +51,10 @@ const EditRequestModal = ({
       updateRequest(request._id, {
         studentId: request.studentId,
         description: description,
-        status: request.status,
+        status: RequestStatus.REQUESTED,
         locationId: selectedLocation?._id || "",
         buildingId: selectedBuilding?._id || "",
+        estimatedCompletion: "",
       }),
   });
 
@@ -92,6 +93,7 @@ const EditRequestModal = ({
         description: description,
         status: RequestStatus.REQUESTED,
         updatedAt: new Date(),
+        estimatedCompletion: "",
       } as Request);
       close();
     }
