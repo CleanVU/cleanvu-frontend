@@ -1,6 +1,15 @@
+import { UserButton, useUser } from "@clerk/clerk-react";
 import { faBroom, faEnvelope, faHome } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { AppShell, Burger, Group, NavLink, Title, Text } from "@mantine/core";
+import {
+  AppShell,
+  Burger,
+  Group,
+  NavLink,
+  Title,
+  Text,
+  Stack,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
@@ -9,6 +18,7 @@ const App = () => {
   const [opened, { toggle }] = useDisclosure();
   const [active, setActive] = useState(0);
   const navigate = useNavigate();
+  const { user } = useUser();
 
   const data = [
     { label: "Dashboard", link: "/dashboard", icon: faHome },
@@ -76,28 +86,68 @@ const App = () => {
         style={{
           backgroundColor: "#EFEFEF",
           gap: 10,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "space-between",
         }}
       >
-        {data.map((item, index) => (
-          <NavLink
-            href="#required-for-focus"
-            key={item.label}
-            active={index === active}
-            label={
-              <Group>
-                <FontAwesomeIcon icon={item.icon} />
-                <Title order={6} fw={600}>
-                  {item.label}
-                </Title>
-              </Group>
-            }
-            onClick={() => {
-              setActive(index);
-              navigateToPage(item.link);
+        <Stack w={"100%"} gap={10}>
+          {data.map((item, index) => (
+            <NavLink
+              href="#required-for-focus"
+              key={item.label}
+              active={index === active}
+              w={"100%"}
+              label={
+                <Group w={"100%"}>
+                  <FontAwesomeIcon
+                    icon={item.icon}
+                    style={{
+                      paddingBottom: "2px",
+                    }}
+                  />
+                  <Title order={6} fw={600}>
+                    {item.label}
+                  </Title>
+                </Group>
+              }
+              onClick={() => {
+                setActive(index);
+                navigateToPage(item.link);
+              }}
+              fw={600}
+              style={{
+                borderRadius: 10,
+              }}
+            />
+          ))}
+        </Stack>
+        <Group
+          pb={20}
+          w={"100%"}
+          style={{
+            display: "flex",
+            gap: 10,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <UserButton />
+          <Stack
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
             }}
-            fw={600}
-          />
-        ))}
+            gap={0}
+          >
+            <Title order={6}>{user?.fullName}</Title>
+            <Text size={"xs"}>{user?.primaryEmailAddress?.emailAddress}</Text>
+          </Stack>
+        </Group>
       </AppShell.Navbar>
       <AppShell.Main>
         <Outlet />

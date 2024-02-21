@@ -53,7 +53,7 @@ export enum RequestStatusColors {
   ALL = "grey",
   REQUESTED = "blue",
   // sort light yell
-  ACCEPTED = "#F6E327",
+  ACCEPTED = "#fad000",
   COMPLETED = "green",
   DENIED = "red",
 }

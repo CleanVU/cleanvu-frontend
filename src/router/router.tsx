@@ -4,10 +4,12 @@ import {
   createBrowserRouter,
 } from "react-router-dom";
 import App from "../layout/App";
+import AuthPage from "../pages/AuthPage/AuthPage";
 import StudentRequestsPage from "../pages/StudentPages/StudentRequestsPage";
 import CustodianRequestsPage from "../pages/CustodianPages/CustodianRequestsPage";
+import { SignedIn, SignedOut } from "@clerk/clerk-react";
 
-const router = createBrowserRouter([
+const protectedRouter = createBrowserRouter([
   {
     path: "/",
     element: <App />,
@@ -18,8 +20,32 @@ const router = createBrowserRouter([
       { path: "/custodian-requests", element: <CustodianRequestsPage /> },
     ],
   },
+  {
+    path: "*",
+    element: <Navigate to="/" />,
+  },
 ]);
 
-const Router = () => <RouterProvider router={router} />;
+const unprotectedRouter = createBrowserRouter([
+  {
+    path: "/auth",
+    element: <AuthPage />,
+  },
+  {
+    path: "*",
+    element: <Navigate to="/auth" />,
+  },
+]);
+
+const Router = () => (
+  <>
+    <SignedIn>
+      <RouterProvider router={protectedRouter} />
+    </SignedIn>
+    <SignedOut>
+      <RouterProvider router={unprotectedRouter} />
+    </SignedOut>
+  </>
+);
 
 export default Router;
