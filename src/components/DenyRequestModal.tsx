@@ -7,43 +7,39 @@ import {
 } from "../interfaces/request.interface";
 import { Location } from "../interfaces/location.interface";
 import { Building } from "../interfaces/building.interface";
-import { DateTimePicker } from "@mantine/dates";
-import { useState } from "react";
 import { updateRequest } from "../api/api";
 import { useMutation } from "@tanstack/react-query";
 
-interface AcceptRequestModalProps {
+interface DenyRequestModalProps {
   opened: boolean;
   close: () => void;
   request: Request;
 }
 
-const AcceptRequestModal = ({
+const DenyRequestModal = ({
   opened,
   close,
   request,
-}: AcceptRequestModalProps) => {
+}: DenyRequestModalProps) => {
   /************** State and Context **************/
   const { updateRequestContext } = useRequestContext();
-  const [estimate, setEstimate] = useState<Date | null>(null);
 
   /************** Hooks **************/
-  const acceptRequestMutation = useMutation<Request>({
+  const denyRequestMutation = useMutation<Request>({
     mutationKey: ["requests"],
     mutationFn: () =>
       updateRequest(request._id, {
         studentId: request.studentId,
         description: request.description,
-        status: RequestStatus.ACCEPTED,
+        status: RequestStatus.DENIED,
         locationId: (request.location as Location)._id,
         buildingId: (request.building as Building)._id,
-        estimatedCompletion: estimate?.toISOString() || "",
+        estimatedCompletion: "",
       }),
     onSuccess: (data: Request) => {
       updateRequestContext(request._id, {
         ...data,
-        status: RequestStatus.ACCEPTED,
-        estimatedCompletion: estimate?.toISOString() || "",
+        status: RequestStatus.DENIED,
       });
       close();
     },
@@ -51,36 +47,27 @@ const AcceptRequestModal = ({
 
   /************** Render **************/
 
-  if (acceptRequestMutation.isPending) return <div>Accepting...</div>;
+  if (denyRequestMutation.isPending) return <div>Denying...</div>;
 
   return (
     <Modal
       opened={opened}
       onClose={close}
-      title="Accept Request"
+      title="Deny Request"
       overlayProps={{
         backgroundOpacity: 0.55,
         blur: 3,
       }}
     >
       <Stack mt={20} mb={20}>
-        <Text>Are you sure you want to accept this request?</Text>
-        <DateTimePicker
-          clearable
-          dropdownType="modal"
-          valueFormat="DD MMM YYYY hh:mm a"
-          label="Estimated Completion Date"
-          placeholder="Select date and time"
-          value={estimate}
-          onChange={(value) => setEstimate(value)}
-        />
+        <Text>Are you sure you want to deny this request?</Text>
         <Group>
           <Button
-            color={RequestStatusColors.ACCEPTED}
+            color={RequestStatusColors.DENIED}
             variant="filled"
-            onClick={() => acceptRequestMutation.mutate()}
+            onClick={() => denyRequestMutation.mutate()}
           >
-            {`Accept`}
+            {`Deny`}
           </Button>
           <Button color="gray" variant="outline" onClick={close}>
             {`Cancel`}
@@ -91,4 +78,4 @@ const AcceptRequestModal = ({
   );
 };
 
-export default AcceptRequestModal;
+export default DenyRequestModal;

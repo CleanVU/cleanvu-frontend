@@ -21,6 +21,7 @@ import { faCheck, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import AcceptRequestModal from "./AcceptRequestModal";
 import { useDisclosure } from "@mantine/hooks";
 import { Building } from "../interfaces/building.interface";
+import DenyRequestModal from "./DenyRequestModal";
 
 /**
  * A card that displays a request
@@ -31,6 +32,10 @@ const CustodianRequestCard = ({ request }: { request: Request }) => {
   const [
     acceptRequestModalOpened,
     { open: openAcceptRequestModal, close: closeAcceptRequestModal },
+  ] = useDisclosure(false);
+  const [
+    denyRequestModalOpened,
+    { open: openDenyRequestModal, close: closeDenyRequestModal },
   ] = useDisclosure(false);
 
   return (
@@ -121,6 +126,7 @@ const CustodianRequestCard = ({ request }: { request: Request }) => {
                   color={RequestStatusColors.DENIED}
                   size="sm"
                   p={10}
+                  onClick={openDenyRequestModal}
                 >
                   <Title order={5} mr={5}>{`Deny`}</Title>
                   <FontAwesomeIcon icon={faXmark} />
@@ -143,6 +149,13 @@ const CustodianRequestCard = ({ request }: { request: Request }) => {
         <AcceptRequestModal
           opened={acceptRequestModalOpened}
           close={closeAcceptRequestModal}
+          request={request}
+        />
+      )}
+      {denyRequestModalOpened && (
+        <DenyRequestModal
+          opened={denyRequestModalOpened}
+          close={closeDenyRequestModal}
           request={request}
         />
       )}

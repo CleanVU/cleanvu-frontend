@@ -33,8 +33,6 @@ const StudentRequestCard = ({ request }: { request: Request }) => {
     { open: openDeleteRequestModal, close: closeDeleteRequestModal },
   ] = useDisclosure(false);
 
-
-
   return (
     <div>
       <Card padding="xl" radius="md" withBorder>

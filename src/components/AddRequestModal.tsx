@@ -53,15 +53,15 @@ const AddRequestModal = ({
         locationId: selectedLocation?._id || "",
         buildingId: selectedBuilding?._id || "",
       }),
-      onSuccess: (data: Request) => {
-        addRequestContext({
-          ...data,
-          studentId: studentId,
-          location: selectedLocation,
-          building: selectedBuilding,
-        } as Request);
-        close();
-      }
+    onSuccess: (data: Request) => {
+      addRequestContext({
+        ...data,
+        studentId: studentId,
+        location: selectedLocation,
+        building: selectedBuilding,
+      } as Request);
+      close();
+    },
   });
 
   /************** Event Handlers **************/
@@ -164,7 +164,11 @@ const AddRequestModal = ({
           />
         )}
       </Stack>
-      <Button color="blue" variant="filled" onClick={() => createRequestMutation.mutate()}>
+      <Button
+        color="blue"
+        variant="filled"
+        onClick={() => createRequestMutation.mutate()}
+      >
         <Text>Submit</Text>
       </Button>
     </Modal>

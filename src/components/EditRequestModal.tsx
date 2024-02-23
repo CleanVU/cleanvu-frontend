@@ -167,7 +167,11 @@ const EditRequestModal = ({
           />
         )}
       </Stack>
-      <Button color="blue" variant="filled" onClick={() => updateRequestMutation.mutate()}>
+      <Button
+        color="blue"
+        variant="filled"
+        onClick={() => updateRequestMutation.mutate()}
+      >
         <Text>Submit</Text>
       </Button>
     </Modal>

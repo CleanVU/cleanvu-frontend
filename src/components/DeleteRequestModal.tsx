@@ -25,7 +25,7 @@ const DeleteRequestModal = ({
     onSuccess: () => {
       deleteRequestContext(requestId);
       close();
-    }
+    },
   });
 
   /************** Render **************/
@@ -42,7 +42,11 @@ const DeleteRequestModal = ({
       <Stack mt={20} mb={20}>
         <Text>Are you sure you want to delete this request?</Text>
         <Group>
-          <Button color="red" variant="filled" onClick={() => deleteRequestMutation.mutate()}>
+          <Button
+            color="red"
+            variant="filled"
+            onClick={() => deleteRequestMutation.mutate()}
+          >
             <Text>Delete</Text>
           </Button>
           <Button color="gray" variant="outline" onClick={close}>
