@@ -39,9 +39,12 @@ const StudentRequestCard = ({ request }: { request: Request }) => {
         <Card.Section>
           <Group justify="space-between" mt="md" mb="xs" ml="xs" mr="xs">
             <Group gap={5}>
+              <Title order={4} fw={400}>
+                Request for
+              </Title>
               <Title
                 order={4}
-              >{`Request for ${(request.location as Location).description}`}</Title>
+              >{` ${(request.location as Location).description}`}</Title>
               <Title
                 order={6}
                 fw={200}

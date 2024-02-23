@@ -44,9 +44,12 @@ const CustodianRequestCard = ({ request }: { request: Request }) => {
         <Card.Section>
           <Group justify="space-between" mt="md" mb="xs" ml="xs" mr="xs">
             <Group gap={5}>
+              <Title order={4} fw={400}>
+                Request for
+              </Title>
               <Title
                 order={4}
-              >{`Request for ${(request.location as Location).description}`}</Title>
+              >{` ${(request.location as Location).description}`}</Title>
               <Title
                 order={6}
                 fw={200}
@@ -94,7 +97,7 @@ const CustodianRequestCard = ({ request }: { request: Request }) => {
                   {request.estimatedCompletion && (
                     <Group>
                       <Text fw={600}>{`Estimated Completion: `}</Text>
-                      <Text>{`${request.estimatedCompletion}`}</Text>
+                      <Text>{`${new Date(request.estimatedCompletion).toLocaleString()}`}</Text>
                     </Group>
                   )}
                 </Stack>

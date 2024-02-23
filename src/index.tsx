@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import Router from "./router/router.tsx";
 import "@mantine/core/styles.css";
+import "@mantine/dates/styles.css";
 import { createTheme, MantineProvider } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { NavigationProvider } from "./context/navigation.context.tsx";

@@ -71,13 +71,6 @@ const App = () => {
             <Title order={1} fw={500}>
               CleanVU
             </Title>
-            <Text
-              style={{
-                textDecoration: "underline",
-              }}
-            >
-              Logout
-            </Text>
           </Group>
         </Group>
       </AppShell.Header>
