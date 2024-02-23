@@ -53,6 +53,9 @@ const StudentRequestsPage = () => {
     }
   }, [status]);
 
+  
+  console.log(currentRequests)
+
   /************** Render **************/
   if (isLoading || !requests) return <div>Loading...</div>;
 

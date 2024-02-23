@@ -39,20 +39,15 @@ const AcceptRequestModal = ({
         buildingId: (request.building as Building)._id,
         estimatedCompletion: estimate?.toISOString() || "",
       }),
+      onSuccess: (data: Request) => {
+        updateRequestContext(request._id, {
+          ...data,
+          status: RequestStatus.ACCEPTED,
+          estimatedCompletion: estimate?.toISOString() || "",
+        });
+        close();
+      },
   });
-
-  /************** Event Handlers **************/
-  const onModalSubmit = () => {
-    if (estimate) {
-      acceptRequestMutation.mutate();
-      updateRequestContext(request._id, {
-        ...request,
-        status: RequestStatus.ACCEPTED,
-        estimatedCompletion: estimate.toISOString(),
-      });
-    }
-    close();
-  };
 
   /************** Render **************/
 
@@ -83,7 +78,7 @@ const AcceptRequestModal = ({
           <Button
             color={RequestStatusColors.ACCEPTED}
             variant="filled"
-            onClick={onModalSubmit}
+            onClick={() => acceptRequestMutation.mutate()}
           >
             {`Accept`}
           </Button>

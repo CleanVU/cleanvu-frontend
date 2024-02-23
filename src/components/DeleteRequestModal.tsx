@@ -22,14 +22,11 @@ const DeleteRequestModal = ({
   const deleteRequestMutation = useMutation<Request>({
     mutationKey: ["requests"],
     mutationFn: () => deleteRequest(requestId),
+    onSuccess: () => {
+      deleteRequestContext(requestId);
+      close();
+    }
   });
-
-  /************** Event Handlers **************/
-  const onModalSubmit = () => {
-    deleteRequestContext(requestId);
-    deleteRequestMutation.mutate();
-    close();
-  };
 
   /************** Render **************/
   return (
@@ -45,7 +42,7 @@ const DeleteRequestModal = ({
       <Stack mt={20} mb={20}>
         <Text>Are you sure you want to delete this request?</Text>
         <Group>
-          <Button color="red" variant="filled" onClick={onModalSubmit}>
+          <Button color="red" variant="filled" onClick={() => deleteRequestMutation.mutate()}>
             <Text>Delete</Text>
           </Button>
           <Button color="gray" variant="outline" onClick={close}>

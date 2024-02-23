@@ -33,6 +33,8 @@ const StudentRequestCard = ({ request }: { request: Request }) => {
     { open: openDeleteRequestModal, close: closeDeleteRequestModal },
   ] = useDisclosure(false);
 
+
+
   return (
     <div>
       <Card padding="xl" radius="md" withBorder>
@@ -95,7 +97,7 @@ const StudentRequestCard = ({ request }: { request: Request }) => {
                   {request.estimatedCompletion && (
                     <Group>
                       <Text fw={600}>{`Estimated Completion: `}</Text>
-                      <Text>{`${request.estimatedCompletion}`}</Text>
+                      <Text>{`${new Date(request.estimatedCompletion).toLocaleString()}`}</Text>
                     </Group>
                   )}
                 </Stack>

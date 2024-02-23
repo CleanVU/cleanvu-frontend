@@ -53,6 +53,15 @@ const AddRequestModal = ({
         locationId: selectedLocation?._id || "",
         buildingId: selectedBuilding?._id || "",
       }),
+      onSuccess: (data: Request) => {
+        addRequestContext({
+          ...data,
+          studentId: studentId,
+          location: selectedLocation,
+          building: selectedBuilding,
+        } as Request);
+        close();
+      }
   });
 
   /************** Event Handlers **************/
@@ -76,18 +85,6 @@ const AddRequestModal = ({
 
   const handleDescriptionChange = (value: string) => {
     setDescription(value);
-  };
-
-  const onModalSubmit = () => {
-    createRequestMutation.mutate();
-    addRequestContext({
-      studentId: studentId,
-      description: description,
-      status: RequestStatus.REQUESTED,
-      location: selectedLocation,
-      building: selectedBuilding,
-    } as Request);
-    close();
   };
 
   /************** Data Processing for Select **************/
@@ -167,7 +164,7 @@ const AddRequestModal = ({
           />
         )}
       </Stack>
-      <Button color="blue" variant="filled" onClick={() => onModalSubmit()}>
+      <Button color="blue" variant="filled" onClick={() => createRequestMutation.mutate()}>
         <Text>Submit</Text>
       </Button>
     </Modal>

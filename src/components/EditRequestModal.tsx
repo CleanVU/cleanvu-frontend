@@ -56,6 +56,13 @@ const EditRequestModal = ({
         buildingId: selectedBuilding?._id || "",
         estimatedCompletion: "",
       }),
+    onSuccess: (data: Request) => {
+      updateRequestContext(request._id, {
+        ...data,
+        status: RequestStatus.REQUESTED,
+      });
+      close();
+    },
   });
 
   /************** Event Handlers **************/
@@ -81,22 +88,6 @@ const EditRequestModal = ({
 
   const handleDescriptionChange = (value: string) => {
     setDescription(value);
-  };
-
-  const onModalSubmit = () => {
-    if (selectedBuilding && selectedFloor && selectedLocation && description) {
-      updateRequestMutation.mutate();
-      updateRequestContext(request._id, {
-        ...request,
-        building: selectedBuilding,
-        location: selectedLocation,
-        description: description,
-        status: RequestStatus.REQUESTED,
-        updatedAt: new Date(),
-        estimatedCompletion: "",
-      } as Request);
-      close();
-    }
   };
 
   /************** Data Processing for Select **************/
@@ -176,7 +167,7 @@ const EditRequestModal = ({
           />
         )}
       </Stack>
-      <Button color="blue" variant="filled" onClick={() => onModalSubmit()}>
+      <Button color="blue" variant="filled" onClick={() => updateRequestMutation.mutate()}>
         <Text>Submit</Text>
       </Button>
     </Modal>
