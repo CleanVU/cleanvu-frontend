@@ -241,7 +241,7 @@ const AuthPage = () => {
               </>
             )}
             {/**************** EMAIL AND PASSWORD ***************/}
-            {(type === "register " || type === "login") && (
+            {(type === "register" || type === "login") && (
               <>
                 <TextInput
                   required
