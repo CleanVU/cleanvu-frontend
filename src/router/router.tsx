@@ -8,6 +8,7 @@ import AuthPage from "../pages/AuthPage/AuthPage";
 import StudentRequestsPage from "../pages/StudentPages/StudentRequestsPage";
 import CustodianRequestsPage from "../pages/CustodianPages/CustodianRequestsPage";
 import { SignedIn, SignedOut } from "@clerk/clerk-react";
+import StudentDashboardPage from "../pages/StudentPages/StudentDashboardPage";
 
 const protectedRouter = createBrowserRouter([
   {
@@ -15,7 +16,7 @@ const protectedRouter = createBrowserRouter([
     element: <App />,
     children: [
       { path: "/", element: <Navigate to="/dashboard" /> },
-      { path: "/dashboard", element: <div>Home</div> },
+      { path: "/dashboard", element: <StudentDashboardPage /> },
       { path: "/requests", element: <StudentRequestsPage /> },
       { path: "/custodian-requests", element: <CustodianRequestsPage /> },
     ],

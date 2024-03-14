@@ -79,6 +79,15 @@ export const createRequest = (request: {
 }): Promise<Request> =>
   axios.post(`${url}/api/request`, request).then((res) => res.data);
 
+/**
+ * Get Request by User ID
+ *
+ * @param id the user's unique id
+ * @returns a promise that resolves to an array of requests
+ */
+export const getRequestByUserId = (userId: string): Promise<Request[]> =>
+  axios.get(`${url}/api/requests/${userId}`).then((res) => res.data);
+
 /************** Location API Calls **************/
 /**
  * Get Locations
