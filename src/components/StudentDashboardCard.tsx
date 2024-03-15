@@ -61,12 +61,6 @@ const StudentDashboardCard = ({ userId }: StudentDashboardCardProps) => {
     (request) => request.status !== RequestStatus.DENIED,
   );
 
-  console.log("completedRequests", completedRequests);
-
-  console.log("requestedRequests", requestedRequests);
-
-  console.log("acceptedRequests", acceptedRequests);
-
   const sections = [
     {
       value:
