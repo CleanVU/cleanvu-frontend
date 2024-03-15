@@ -1,4 +1,4 @@
-import { Button, Card, Group, Text } from "@mantine/core";
+import { Button, Card, Group, Text, Title } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { getRequestByUserId } from "../api/api";
@@ -42,17 +42,19 @@ const StudentRecentRequests = ({ userId }: StudentRecentRequestsProps) => {
   return (
     <>
       <Card shadow="sm" padding="xl">
-        <Text>{`Recent Requests`}</Text>
-        <Button
-          variant="filled"
-          color="blue"
-          onClick={() => setAddRequestOpen(true)}
-        >
-          <Group gap={10}>
-            <Text fw={600}>Add Request</Text>
-            <FontAwesomeIcon icon={faPlus} />
-          </Group>
-        </Button>
+        <Group justify="space-between">
+          <Title order={3}>Recent Requests</Title>
+          <Button
+            variant="filled"
+            color="blue"
+            onClick={() => setAddRequestOpen(true)}
+          >
+            <Group gap={10}>
+              <Text fw={600}>Add Request</Text>
+              <FontAwesomeIcon icon={faPlus} />
+            </Group>
+          </Button>
+        </Group>
         {recentRequests &&
           recentRequests.map((request) => (
             <StudentRequestCard key={request._id} request={request} />
