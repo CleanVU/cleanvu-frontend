@@ -1,4 +1,11 @@
-import { Card, Group, RingProgress, Title } from "@mantine/core";
+import {
+  Card,
+  Group,
+  RingProgress,
+  SimpleGrid,
+  Text,
+  Title,
+} from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { getRequestByUserId } from "../api/api";
@@ -46,6 +53,14 @@ const StudentDashboardCard = ({ userId }: StudentDashboardCardProps) => {
     (request) => request.status === RequestStatus.ACCEPTED,
   );
 
+  const deniedRequests = currentRequests?.filter(
+    (request) => request.status === RequestStatus.DENIED,
+  );
+
+  const nonDeniedRequests = currentRequests?.filter(
+    (request) => request.status !== RequestStatus.DENIED,
+  );
+
   console.log("completedRequests", completedRequests);
 
   console.log("requestedRequests", requestedRequests);
@@ -55,27 +70,41 @@ const StudentDashboardCard = ({ userId }: StudentDashboardCardProps) => {
   const sections = [
     {
       value:
-        completedRequests && currentRequests
-          ? (completedRequests.length / currentRequests.length) * 100
+        completedRequests && nonDeniedRequests
+          ? (completedRequests.length / nonDeniedRequests.length) * 100
           : 0,
       color: RequestStatusColors.COMPLETED,
       tooltip: `Completed: ${completedRequests?.length}`,
+      name: "Completed",
     },
     {
       value:
-        requestedRequests && currentRequests
-          ? (requestedRequests.length / currentRequests.length) * 100
+        requestedRequests && nonDeniedRequests
+          ? (requestedRequests.length / nonDeniedRequests.length) * 100
           : 0,
       color: RequestStatusColors.REQUESTED,
       tooltip: `Requested: ${requestedRequests?.length}`,
+      name: "Requested",
     },
     {
       value:
-        acceptedRequests && currentRequests
-          ? (acceptedRequests.length / currentRequests.length) * 100
+        acceptedRequests && nonDeniedRequests
+          ? (acceptedRequests.length / nonDeniedRequests.length) * 100
           : 0,
       color: RequestStatusColors.ACCEPTED,
       tooltip: `Accepted: ${acceptedRequests?.length}`,
+      name: "Accepted",
+    },
+    {
+      value:
+        deniedRequests && nonDeniedRequests
+          ? deniedRequests.length > 0
+            ? 100
+            : 0
+          : 0,
+      color: RequestStatusColors.DENIED,
+      tooltip: `Denied: ${deniedRequests?.length}`,
+      name: "Denied",
     },
   ];
 
@@ -85,17 +114,25 @@ const StudentDashboardCard = ({ userId }: StudentDashboardCardProps) => {
     <Group>
       <Card shadow="sm" padding="xl">
         <Title order={3}>{`Requests`}</Title>
-        <RingProgress
-          sections={sections}
-          size={200}
-          thickness={20}
-          styles={{
-            root: {
-              width: "100%",
-              height: "100%",
-            },
-          }}
-        />
+        <SimpleGrid cols={2} spacing="md">
+          {currentRequests &&
+            sections.map((section, index) => (
+              <RingProgress
+                key={index}
+                sections={[section]}
+                size={175}
+                thickness={20}
+                roundCaps
+                styles={{
+                  root: {
+                    width: "100%",
+                    height: "100%",
+                  },
+                }}
+                label={<Text size="sm" ta="center">{`${section.name}`}</Text>}
+              />
+            ))}
+        </SimpleGrid>
       </Card>
     </Group>
   );
