@@ -21,7 +21,7 @@ const StudentDashboardPage = () => {
   return (
     <>
       <Title order={1}>{`Dashboard`}</Title>
-      <Group>
+      <Group align="flex-start">
         <StudentDashboardCard userId={"65bd4b12088bf10ee6612e4b"} />
         <StudentRecentRequests userId={"65bd4b12088bf10ee6612e4b"} />
       </Group>

@@ -20,6 +20,8 @@ const App = () => {
   const navigate = useNavigate();
   const { user } = useUser();
 
+  console.log("user", user);
+
   const data = [
     { label: "Dashboard", link: "/dashboard", icon: faHome },
     {
