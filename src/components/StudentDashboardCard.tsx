@@ -114,7 +114,7 @@ const StudentDashboardCard = ({ userId }: StudentDashboardCardProps) => {
               <RingProgress
                 key={index}
                 sections={[section]}
-                size={175}
+                size={160}
                 thickness={20}
                 roundCaps
                 styles={{
