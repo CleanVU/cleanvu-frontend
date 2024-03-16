@@ -46,7 +46,7 @@ const StudentRecentRequests = ({ userId }: StudentRecentRequestsProps) => {
   }, [status]);
 
   /************** Render **************/
-  const recentRequests = currentRequests?.slice(0, 5);
+  const recentRequests = currentRequests?.slice(0, 4);
 
   if (isLoading || !userRequests) return <div>Loading...</div>;
 
