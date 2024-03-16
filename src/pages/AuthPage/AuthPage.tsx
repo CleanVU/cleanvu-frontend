@@ -17,6 +17,14 @@ import GoogleButton from "../../components/GoogleButton/GoogleButton";
 import styles from "./AuthPage.module.css";
 import { useAuth, useSignIn, useSignUp } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { createUser } from "../../api/api";
+import { Role, User } from "../../interfaces/user.interface";
+import { useUserContext } from "../../context/user.context";
+import {
+  removeValueFromLocalStorage,
+  setValueToLocalStorage,
+} from "../../util/storage.util";
 
 const AuthPage = () => {
   const [type, toggle] = useToggle(["login", "register", "registerCode"]);
@@ -32,6 +40,7 @@ const AuthPage = () => {
   } = useSignIn();
   const { signOut } = useAuth();
   const navigate = useNavigate();
+  const { currentUser, setCurrentUser } = useUserContext();
 
   const form: any = useForm({
     initialValues: {
@@ -61,6 +70,21 @@ const AuthPage = () => {
     },
     validate: {
       code: (val) => (val.length === 6 ? null : "Invalid code"),
+    },
+  });
+
+  /**************** Hooks **************/
+  const createUserMutation = useMutation<User, Error, User>({
+    mutationKey: ["users"],
+    mutationFn: (user: User) => createUser(user),
+    onSuccess: (data: User) => {
+      console.log("setting current user", data);
+      setCurrentUser(data);
+      setValueToLocalStorage("accountEmail", data.email);
+      setValueToLocalStorage("accountRole", data.role);
+      console.log("User created", data);
+      console.log(currentUser);
+      navigate("/dashboard");
     },
   });
 
@@ -96,6 +120,9 @@ const AuthPage = () => {
       // If the sign in was successful, set the active session and make the user request
       if (completeSignIn.status === "complete") {
         await setSignInActive({ session: completeSignIn.createdSessionId });
+
+        // Get the user from the database
+        console.log(completeSignIn.identifier);
 
         // Redirect to the dashboard
         navigate("/dashboard");
@@ -161,6 +188,8 @@ const AuthPage = () => {
       ) {
         console.log("session already exists");
         await signOut();
+        removeValueFromLocalStorage("accountEmail");
+        removeValueFromLocalStorage("accountRole");
         await onSubmitSignUp(signUpData);
       }
     }
@@ -185,7 +214,13 @@ const AuthPage = () => {
       } else {
         // set the user as active and navigate to the home page
         await setSignUpActive({ session: completeSignUp.createdSessionId });
-        navigate("/");
+
+        // create the user in the database
+        createUserMutation.mutate({
+          _id: signUp.id,
+          email: signUp.emailAddress,
+          role: Role.STUDENT,
+        } as User);
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {

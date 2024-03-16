@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Building } from "../interfaces/building.interface";
 import { Request } from "../interfaces/request.interface";
-
+import { User } from "../interfaces/user.interface";
 const url = "http://localhost:8081";
 
 /************** Building API Calls **************/
@@ -85,7 +85,7 @@ export const createRequest = (request: {
  * @param id the user's unique id
  * @returns a promise that resolves to an array of requests
  */
-export const getRequestByUserId = (userId: string): Promise<Request[]> =>
+export const getRequestsByUserId = (userId: string): Promise<Request[]> =>
   axios.get(`${url}/api/requests/${userId}`).then((res) => res.data);
 
 /************** Location API Calls **************/
@@ -99,4 +99,29 @@ export const getRequestByUserId = (userId: string): Promise<Request[]> =>
 export const getLocations = (count: number, page: number) =>
   axios
     .get(`${url}/api/locations?count=${count}&page=${page}`)
+    .then((res) => res.data);
+
+/************** User API Calls **************/
+/**
+ * Get User
+ *
+ * @param id the user's unique id
+ * @returns a promise that resolves to the user
+ */
+export const getUser = (id: string) =>
+  axios.get(`${url}/api/user/${id}`).then((res) => res.data);
+
+/**
+ * Create User
+ *
+ * @param user the user to create
+ * @returns a promise that resolves to the created user
+ */
+export const createUser = (user: User) =>
+  axios
+    .post(`${url}/api/user`, {
+      email: user.email,
+      role: user.role,
+      userId: user._id,
+    })
     .then((res) => res.data);

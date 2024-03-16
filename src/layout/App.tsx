@@ -13,16 +13,39 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+import { Role } from "../interfaces/user.interface";
+import { useUserContext } from "../context/user.context";
+import { getValueFromLocalStorage } from "../util/storage.util";
 
 const App = () => {
   const [opened, { toggle }] = useDisclosure();
   const [active, setActive] = useState(0);
   const navigate = useNavigate();
   const { user } = useUser();
+  const { currentUser } = useUserContext();
 
-  console.log("user", user);
+  const role =
+    currentUser?.role || getValueFromLocalStorage("accountRole") || undefined;
 
-  const data = [
+  const studentSidebar = [
+    { label: "Dashboard", link: "/dashboard", icon: faHome },
+    {
+      label: "Requests",
+      link: "/requests",
+      icon: faEnvelope,
+    },
+  ];
+
+  const custodianSidebar = [
+    { label: "Dashboard", link: "/dashboard", icon: faHome },
+    {
+      label: "Custodian Requests",
+      link: "/custodian-requests",
+      icon: faBroom,
+    },
+  ];
+
+  const adminSidebar = [
     { label: "Dashboard", link: "/dashboard", icon: faHome },
     {
       label: "Requests",
@@ -30,11 +53,18 @@ const App = () => {
       icon: faEnvelope,
     },
     {
-      label: "C Requests",
+      label: "Custodian Requests",
       link: "/custodian-requests",
       icon: faBroom,
     },
   ];
+
+  const sidebarTabs =
+    role == Role.STUDENT
+      ? studentSidebar
+      : role == Role.CUSTODIAN
+        ? custodianSidebar
+        : adminSidebar;
 
   const navigateToPage = (path: string) => {
     navigate(path);
@@ -88,7 +118,7 @@ const App = () => {
         }}
       >
         <Stack w={"100%"} gap={10}>
-          {data.map((item, index) => (
+          {sidebarTabs.map((item, index) => (
             <NavLink
               href="#required-for-focus"
               key={item.label}

@@ -8,7 +8,7 @@ import {
 } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { getRequestByUserId } from "../api/api";
+import { getRequestsByUserId } from "../api/api";
 import { useRequestContext } from "../context/request.context";
 import {
   Request,
@@ -31,7 +31,7 @@ const StudentDashboardCard = ({ userId }: StudentDashboardCardProps) => {
     status,
   } = useQuery<Request[]>({
     queryKey: ["requests"],
-    queryFn: () => getRequestByUserId(userId),
+    queryFn: () => getRequestsByUserId(userId),
   });
 
   useEffect(() => {

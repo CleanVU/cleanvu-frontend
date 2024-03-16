@@ -11,8 +11,6 @@ const StudentDashboardPage = () => {
   const { setCurrentTab } = useNavigationContext();
   const { currentUser } = useUserContext();
 
-  console.log("currentUser", currentUser);
-
   useEffect(() => {
     setCurrentTab(StudentTabs.DASHBOARD);
   }, []);
@@ -22,8 +20,8 @@ const StudentDashboardPage = () => {
     <>
       <Title order={1}>{`Dashboard`}</Title>
       <Group align="flex-start">
-        <StudentDashboardCard userId={"65bd4b12088bf10ee6612e4b"} />
-        <StudentRecentRequests userId={"65bd4b12088bf10ee6612e4b"} />
+        <StudentDashboardCard userId={currentUser?._id || ""} />
+        <StudentRecentRequests userId={currentUser?._id || ""} />
       </Group>
     </>
   );

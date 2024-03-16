@@ -11,7 +11,7 @@ import {
 } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { getRequestByUserId } from "../api/api";
+import { getRequestsByUserId } from "../api/api";
 import { useRequestContext } from "../context/request.context";
 import { Request, RequestStatusColors } from "../interfaces/request.interface";
 import AddRequestModal from "./AddRequestModal";
@@ -36,7 +36,7 @@ const StudentRecentRequests = ({ userId }: StudentRecentRequestsProps) => {
     status,
   } = useQuery<Request[]>({
     queryKey: ["requests"],
-    queryFn: () => getRequestByUserId(userId),
+    queryFn: () => getRequestsByUserId(userId),
   });
 
   useEffect(() => {

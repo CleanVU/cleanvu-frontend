@@ -10,6 +10,7 @@ import CustodianRequestsPage from "../pages/CustodianPages/CustodianRequestsPage
 import { SignedIn, SignedOut } from "@clerk/clerk-react";
 import StudentDashboardPage from "../pages/StudentPages/StudentDashboardPage";
 import { useUserContext } from "../context/user.context";
+import { getValueFromLocalStorage } from "../util/storage.util";
 
 const protectedRouter = createBrowserRouter([
   {
@@ -83,9 +84,8 @@ const getRoutes = (role: string) => {
 
 const Router = () => {
   const { currentUser } = useUserContext();
-  const role = currentUser?.role || null;
-
-  console.log("role", role);
+  const role =
+    currentUser?.role || getValueFromLocalStorage("accountRole") || undefined;
 
   return (
     <>
