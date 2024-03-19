@@ -28,6 +28,8 @@ const StudentRecentRequests = ({ userId }: StudentRecentRequestsProps) => {
   /************** State and Context **************/
   const { currentRequests, setCurrentRequests } = useRequestContext();
   const [addRequestOpen, setAddRequestOpen] = useState(false);
+  const [page] = useState(1);
+  const [count] = useState(3);
 
   /************** Hooks **************/
   const {
@@ -35,8 +37,8 @@ const StudentRecentRequests = ({ userId }: StudentRecentRequestsProps) => {
     isLoading,
     status,
   } = useQuery<Request[]>({
-    queryKey: ["requests"],
-    queryFn: () => getRequestsByUserId(userId),
+    queryKey: ["requests", page, count],
+    queryFn: () => getRequestsByUserId(userId, page, count),
   });
 
   useEffect(() => {

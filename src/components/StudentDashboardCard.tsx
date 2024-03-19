@@ -31,7 +31,7 @@ const StudentDashboardCard = ({ userId }: StudentDashboardCardProps) => {
     status,
   } = useQuery<Request[]>({
     queryKey: ["requests"],
-    queryFn: () => getRequestsByUserId(userId),
+    queryFn: () => getRequestsByUserId(userId, 1, 1000),
   });
 
   useEffect(() => {

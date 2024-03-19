@@ -85,8 +85,14 @@ export const createRequest = (request: {
  * @param id the user's unique id
  * @returns a promise that resolves to an array of requests
  */
-export const getRequestsByUserId = (userId: string): Promise<Request[]> =>
-  axios.get(`${url}/api/requests/${userId}`).then((res) => res.data);
+export const getRequestsByUserId = (
+  userId: string,
+  page: number,
+  count: number,
+): Promise<Request[]> =>
+  axios
+    .get(`${url}/api/requests/${userId}?count=${count}&page=${page}`)
+    .then((res) => res.data);
 
 /************** Location API Calls **************/
 /**
@@ -117,11 +123,11 @@ export const getUser = (id: string) =>
  * @param user the user to create
  * @returns a promise that resolves to the created user
  */
-export const createUser = (user: User) =>
+export const createUser = (user: User & { userId: string }) =>
   axios
     .post(`${url}/api/user`, {
       email: user.email,
       role: user.role,
-      userId: user._id,
+      userId: user.userId,
     })
     .then((res) => res.data);

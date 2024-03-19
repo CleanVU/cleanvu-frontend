@@ -44,7 +44,7 @@ const StudentRequestsPage = () => {
     status,
   } = useQuery<Request[]>({
     queryKey: ["requests"],
-    queryFn: () => getRequestsByUserId(currentUser?._id || ""),
+    queryFn: () => getRequestsByUserId(currentUser?._id || "", 1, 1000),
   });
 
   useEffect(() => {

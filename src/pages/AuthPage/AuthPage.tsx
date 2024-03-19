@@ -74,9 +74,13 @@ const AuthPage = () => {
   });
 
   /**************** Hooks **************/
-  const createUserMutation = useMutation<User, Error, User>({
+  const createUserMutation = useMutation<
+    User & { userId: string },
+    Error,
+    User & { userId: string }
+  >({
     mutationKey: ["users"],
-    mutationFn: (user: User) => createUser(user),
+    mutationFn: (user: User & { userId: string }) => createUser(user),
     onSuccess: (data: User) => {
       console.log("setting current user", data);
       setCurrentUser(data);
@@ -217,10 +221,10 @@ const AuthPage = () => {
 
         // create the user in the database
         createUserMutation.mutate({
-          _id: signUp.id,
-          email: signUp.emailAddress,
+          email: signUp.emailAddress as string,
           role: Role.STUDENT,
-        } as User);
+          userId: completeSignUp.createdUserId as string,
+        });
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
