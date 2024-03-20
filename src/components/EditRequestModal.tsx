@@ -6,6 +6,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { getBuildings, getLocations, updateRequest } from "../api/api";
 import { Building } from "../interfaces/building.interface";
 import { Location } from "../interfaces/location.interface";
+import { useAuth } from "@clerk/clerk-react";
 
 interface EditRequestModalProps {
   opened: boolean;
@@ -19,6 +20,7 @@ const EditRequestModal = ({
 }: EditRequestModalProps) => {
   /************** State and Context **************/
   const { updateRequestContext } = useRequestContext();
+  const { getToken } = useAuth();
   const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(
     request.building as Building,
   );
@@ -35,26 +37,38 @@ const EditRequestModal = ({
     Building[]
   >({
     queryKey: ["buildings"],
-    queryFn: () => getBuildings(10, 1),
+    queryFn: async () => getBuildings(10, 1, await getToken()),
   });
 
   const { data: locations, isLoading: isLoadingLocations } = useQuery<
     Location[]
   >({
     queryKey: ["locations"],
-    queryFn: () => getLocations(10, 1),
+    queryFn: async () => getLocations(10, 1, await getToken()),
   });
 
   const updateRequestMutation = useMutation<Request>({
     mutationKey: ["requests"],
-    mutationFn: () =>
-      updateRequest(request._id, {
-        studentId: request.studentId,
-        description: description,
-        status: request.status,
-        locationId: selectedLocation?._id || "",
-        buildingId: selectedBuilding?._id || "",
-      }),
+    mutationFn: async () =>
+      updateRequest(
+        request._id,
+        {
+          studentId: request.studentId,
+          description: description,
+          status: RequestStatus.REQUESTED,
+          locationId: selectedLocation?._id || "",
+          buildingId: selectedBuilding?._id || "",
+          estimatedCompletion: "",
+        },
+        await getToken(),
+      ),
+    onSuccess: (data: Request) => {
+      updateRequestContext(request._id, {
+        ...data,
+        status: RequestStatus.REQUESTED,
+      });
+      close();
+    },
   });
 
   /************** Event Handlers **************/
@@ -80,21 +94,6 @@ const EditRequestModal = ({
 
   const handleDescriptionChange = (value: string) => {
     setDescription(value);
-  };
-
-  const onModalSubmit = () => {
-    if (selectedBuilding && selectedFloor && selectedLocation && description) {
-      updateRequestMutation.mutate();
-      updateRequestContext(request._id, {
-        ...request,
-        building: selectedBuilding,
-        location: selectedLocation,
-        description: description,
-        status: RequestStatus.REQUESTED,
-        updatedAt: new Date(),
-      } as Request);
-      close();
-    }
   };
 
   /************** Data Processing for Select **************/
@@ -174,7 +173,11 @@ const EditRequestModal = ({
           />
         )}
       </Stack>
-      <Button color="blue" variant="filled" onClick={() => onModalSubmit()}>
+      <Button
+        color="blue"
+        variant="filled"
+        onClick={() => updateRequestMutation.mutate()}
+      >
         <Text>Submit</Text>
       </Button>
     </Modal>

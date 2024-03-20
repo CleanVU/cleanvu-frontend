@@ -3,6 +3,7 @@ import { useRequestContext } from "../context/request.context";
 import { useMutation } from "@tanstack/react-query";
 import { deleteRequest } from "../api/api";
 import { Request } from "../interfaces/request.interface";
+import { useAuth } from "@clerk/clerk-react";
 
 interface DeleteRequestModalProps {
   opened: boolean;
@@ -17,22 +18,19 @@ const DeleteRequestModal = ({
 }: DeleteRequestModalProps) => {
   /************** Context **************/
   const { deleteRequestContext } = useRequestContext();
+  const { getToken } = useAuth();
 
   /************** Hooks **************/
-  const { isPending: isDeleting } = useMutation<Request>({
+  const deleteRequestMutation = useMutation<Request>({
     mutationKey: ["requests"],
-    mutationFn: () => deleteRequest(requestId),
+    mutationFn: async () => deleteRequest(requestId, await getToken()),
+    onSuccess: () => {
+      deleteRequestContext(requestId);
+      close();
+    },
   });
 
-  /************** Event Handlers **************/
-  const onModalSubmit = () => {
-    deleteRequestContext(requestId);
-    close();
-  };
-
   /************** Render **************/
-  if (isDeleting) return <div>Deleting...</div>;
-
   return (
     <Modal
       opened={opened}
@@ -46,7 +44,11 @@ const DeleteRequestModal = ({
       <Stack mt={20} mb={20}>
         <Text>Are you sure you want to delete this request?</Text>
         <Group>
-          <Button color="red" variant="filled" onClick={onModalSubmit}>
+          <Button
+            color="red"
+            variant="filled"
+            onClick={() => deleteRequestMutation.mutate()}
+          >
             <Text>Delete</Text>
           </Button>
           <Button color="gray" variant="outline" onClick={close}>

@@ -39,9 +39,12 @@ const StudentRequestCard = ({ request }: { request: Request }) => {
         <Card.Section>
           <Group justify="space-between" mt="md" mb="xs" ml="xs" mr="xs">
             <Group gap={5}>
+              <Title order={4} fw={400}>
+                Request for
+              </Title>
               <Title
                 order={4}
-              >{`Request for ${(request.location as Location).description}`}</Title>
+              >{` ${(request.location as Location).description}`}</Title>
               <Title
                 order={6}
                 fw={200}
@@ -86,10 +89,16 @@ const StudentRequestCard = ({ request }: { request: Request }) => {
                     <Text fw={600}>{`Initiated: `}</Text>
                     <Text>{`${new Date(request.createdAt).toLocaleString()}`}</Text>
                   </Group>
+                  {request.updatedAt && (
+                    <Group>
+                      <Text fw={600}>{`Last Updated: `}</Text>
+                      <Text>{`${new Date(request.updatedAt).toLocaleString()}`}</Text>
+                    </Group>
+                  )}
                   {request.estimatedCompletion && (
                     <Group>
                       <Text fw={600}>{`Estimated Completion: `}</Text>
-                      <Text>{`${request.estimatedCompletion}`}</Text>
+                      <Text>{`${new Date(request.estimatedCompletion).toLocaleString()}`}</Text>
                     </Group>
                   )}
                 </Stack>

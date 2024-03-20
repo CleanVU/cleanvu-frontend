@@ -13,6 +13,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+import { Role } from "../interfaces/user.interface";
 
 const App = () => {
   const [opened, { toggle }] = useDisclosure();
@@ -20,19 +21,46 @@ const App = () => {
   const navigate = useNavigate();
   const { user } = useUser();
 
-  const data = [
+  const studentSidebar = [
     { label: "Dashboard", link: "/dashboard", icon: faHome },
     {
       label: "Requests",
       link: "/requests",
       icon: faEnvelope,
     },
+  ];
+
+  const custodianSidebar = [
+    { label: "Dashboard", link: "/dashboard", icon: faHome },
     {
-      label: "C Requests",
+      label: "Requests",
       link: "/custodian-requests",
       icon: faBroom,
     },
   ];
+
+  const adminSidebar = [
+    { label: "Dashboard", link: "/dashboard", icon: faHome },
+    {
+      label: "All Requests",
+      link: "/requests",
+      icon: faEnvelope,
+    },
+    {
+      label: "Custodian View",
+      link: "/custodian-requests",
+      icon: faBroom,
+    },
+  ];
+
+  const sidebarTabs =
+    user?.publicMetadata.role == Role.STUDENT
+      ? studentSidebar
+      : user?.publicMetadata.role == Role.CUSTODIAN
+        ? custodianSidebar
+        : adminSidebar;
+
+  console.log(user?.publicMetadata.role);
 
   const navigateToPage = (path: string) => {
     navigate(path);
@@ -71,13 +99,6 @@ const App = () => {
             <Title order={1} fw={500}>
               CleanVU
             </Title>
-            <Text
-              style={{
-                textDecoration: "underline",
-              }}
-            >
-              Logout
-            </Text>
           </Group>
         </Group>
       </AppShell.Header>
@@ -93,7 +114,7 @@ const App = () => {
         }}
       >
         <Stack w={"100%"} gap={10}>
-          {data.map((item, index) => (
+          {sidebarTabs.map((item, index) => (
             <NavLink
               href="#required-for-focus"
               key={item.label}

@@ -21,6 +21,7 @@ import { faCheck, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import AcceptRequestModal from "./AcceptRequestModal";
 import { useDisclosure } from "@mantine/hooks";
 import { Building } from "../interfaces/building.interface";
+import DenyRequestModal from "./DenyRequestModal";
 
 /**
  * A card that displays a request
@@ -32,6 +33,10 @@ const CustodianRequestCard = ({ request }: { request: Request }) => {
     acceptRequestModalOpened,
     { open: openAcceptRequestModal, close: closeAcceptRequestModal },
   ] = useDisclosure(false);
+  const [
+    denyRequestModalOpened,
+    { open: openDenyRequestModal, close: closeDenyRequestModal },
+  ] = useDisclosure(false);
 
   return (
     <div>
@@ -39,9 +44,12 @@ const CustodianRequestCard = ({ request }: { request: Request }) => {
         <Card.Section>
           <Group justify="space-between" mt="md" mb="xs" ml="xs" mr="xs">
             <Group gap={5}>
+              <Title order={4} fw={400}>
+                Request for
+              </Title>
               <Title
                 order={4}
-              >{`Request for ${(request.location as Location).description}`}</Title>
+              >{` ${(request.location as Location).description}`}</Title>
               <Title
                 order={6}
                 fw={200}
@@ -89,7 +97,7 @@ const CustodianRequestCard = ({ request }: { request: Request }) => {
                   {request.estimatedCompletion && (
                     <Group>
                       <Text fw={600}>{`Estimated Completion: `}</Text>
-                      <Text>{`${request.estimatedCompletion}`}</Text>
+                      <Text>{`${new Date(request.estimatedCompletion).toLocaleString()}`}</Text>
                     </Group>
                   )}
                 </Stack>
@@ -121,6 +129,7 @@ const CustodianRequestCard = ({ request }: { request: Request }) => {
                   color={RequestStatusColors.DENIED}
                   size="sm"
                   p={10}
+                  onClick={openDenyRequestModal}
                 >
                   <Title order={5} mr={5}>{`Deny`}</Title>
                   <FontAwesomeIcon icon={faXmark} />
@@ -143,6 +152,13 @@ const CustodianRequestCard = ({ request }: { request: Request }) => {
         <AcceptRequestModal
           opened={acceptRequestModalOpened}
           close={closeAcceptRequestModal}
+          request={request}
+        />
+      )}
+      {denyRequestModalOpened && (
+        <DenyRequestModal
+          opened={denyRequestModalOpened}
+          close={closeDenyRequestModal}
           request={request}
         />
       )}

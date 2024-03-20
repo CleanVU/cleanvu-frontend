@@ -17,11 +17,13 @@ import StudentRequestCard from "../../components/StudentRequestCard";
 import { useNavigationContext } from "../../context/navigation.context";
 import { StudentTabs } from "../../interfaces/user.interface";
 import { useQuery } from "@tanstack/react-query";
-import { getRequests } from "../../api/api";
 import { useRequestContext } from "../../context/request.context";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import AddRequestModal from "../../components/AddRequestModal";
+import { useUserContext } from "../../context/user.context";
+import { getRequestsByUserId } from "../../api/api";
+import { useAuth } from "@clerk/clerk-react";
 
 const StudentRequestsPage = () => {
   /************** State and Context **************/
@@ -32,6 +34,10 @@ const StudentRequestsPage = () => {
   );
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [addRequestOpen, setAddRequestOpen] = useState(false);
+  const { currentUser } = useUserContext();
+  const { getToken } = useAuth();
+
+  console.log(currentUser);
 
   /************** Hooks **************/
   const {
@@ -40,7 +46,8 @@ const StudentRequestsPage = () => {
     status,
   } = useQuery<Request[]>({
     queryKey: ["requests"],
-    queryFn: () => getRequests(10, 1),
+    queryFn: async () =>
+      getRequestsByUserId(currentUser?._id || "", 1, 1000, await getToken()),
   });
 
   useEffect(() => {
@@ -150,7 +157,7 @@ const StudentRequestsPage = () => {
         <AddRequestModal
           opened={addRequestOpen}
           close={() => setAddRequestOpen(false)}
-          studentId="65bd4b12088bf10ee6612e4b"
+          studentId={currentUser?._id || ""}
         />
       )}
     </div>

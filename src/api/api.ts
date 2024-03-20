@@ -1,13 +1,13 @@
 import axios from "axios";
 import { Building } from "../interfaces/building.interface";
 import { Request } from "../interfaces/request.interface";
-
+import { User } from "../interfaces/user.interface";
 const url = "http://localhost:8081";
 
 /************** Building API Calls **************/
 
 /**
- * Get Buildings
+ * Get Building
  *
  * @param count the number of buildings to get
  * @param page the page number
@@ -16,9 +16,14 @@ const url = "http://localhost:8081";
 export const getBuildings = (
   count: number,
   page: number,
+  token?: string | null,
 ): Promise<Building[]> =>
   axios
-    .get(`${url}/api/buildings?count=${count}&page=${page}`)
+    .get(`${url}/api/buildings?count=${count}&page=${page}`, {
+      headers: {
+        Authorization: `Bearer ${token || ""}`,
+      },
+    })
     .then((res) => res.data);
 
 /************** Request API Calls **************/
@@ -30,9 +35,17 @@ export const getBuildings = (
  * @param page the page number
  * @returns a promise that resolves to an array of requests
  */
-export const getRequests = (count: number, page: number): Promise<Request[]> =>
+export const getRequests = (
+  count: number,
+  page: number,
+  token?: string | null,
+): Promise<Request[]> =>
   axios
-    .get(`${url}/api/requests?count=${count}&page=${page}`)
+    .get(`${url}/api/requests?count=${count}&page=${page}`, {
+      headers: {
+        Authorization: `Bearer ${token || ""}`,
+      },
+    })
     .then((res) => res.data);
 
 /**
@@ -41,8 +54,17 @@ export const getRequests = (count: number, page: number): Promise<Request[]> =>
  * @param id the request's unique id
  * @returns a promise that resolves to the deleted request
  */
-export const deleteRequest = (id: string): Promise<Request> =>
-  axios.delete(`${url}/api/requests/${id}`).then((res) => res.data);
+export const deleteRequest = (
+  id: string,
+  token?: string | null,
+): Promise<Request> =>
+  axios
+    .delete(`${url}/api/request/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token || ""}`,
+      },
+    })
+    .then((res) => res.data);
 
 /**
  * Update Request
@@ -59,9 +81,17 @@ export const updateRequest = (
     status: string;
     locationId: string;
     buildingId: string;
+    estimatedCompletion: string;
   },
+  token?: string | null,
 ): Promise<Request> =>
-  axios.put(`${url}/api/request/${id}`, request).then((res) => res.data);
+  axios
+    .put(`${url}/api/request/${id}`, request, {
+      headers: {
+        Authorization: `Bearer ${token || ""}`,
+      },
+    })
+    .then((res) => res.data);
 
 /**
  * Create Request
@@ -75,8 +105,35 @@ export const createRequest = (request: {
   status: string;
   locationId: string;
   buildingId: string;
+  token?: string | null;
 }): Promise<Request> =>
-  axios.post(`${url}/api/request`, request).then((res) => res.data);
+  axios
+    .post(`${url}/api/request`, request, {
+      headers: {
+        Authorization: `Bearer ${request.token || ""}`,
+      },
+    })
+    .then((res) => res.data);
+
+/**
+ * Get Request by User ID
+ *
+ * @param id the user's unique id
+ * @returns a promise that resolves to an array of requests
+ */
+export const getRequestsByUserId = (
+  userId: string,
+  page: number,
+  count: number,
+  token?: string | null,
+): Promise<Request[]> =>
+  axios
+    .get(`${url}/api/requests/${userId}?count=${count}&page=${page}`, {
+      headers: {
+        Authorization: `Bearer ${token || ""}`,
+      },
+    })
+    .then((res) => res.data);
 
 /************** Location API Calls **************/
 /**
@@ -86,7 +143,57 @@ export const createRequest = (request: {
  * @param page the page number
  * @returns a promise that resolves to an array of locations
  */
-export const getLocations = (count: number, page: number) =>
+export const getLocations = (
+  count: number,
+  page: number,
+  token?: string | null,
+) =>
   axios
-    .get(`${url}/api/locations?count=${count}&page=${page}`)
+    .get(`${url}/api/locations?count=${count}&page=${page}`, {
+      headers: {
+        Authorization: `Bearer ${token || ""}`,
+      },
+    })
+    .then((res) => res.data);
+
+/************** User API Calls **************/
+/**
+ * Get User
+ *
+ * @param id the user's unique id
+ * @returns a promise that resolves to the user
+ */
+export const getUser = (id: string, token?: string | null) =>
+  axios
+    .get(`${url}/api/user/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token || ""}`,
+      },
+    })
+    .then((res) => res.data);
+
+/**
+ * Create User
+ *
+ * @param user the user to create
+ * @returns a promise that resolves to the created user
+ */
+export const createUser = (
+  user: User & { userId: string },
+  token?: string | null,
+) =>
+  axios
+    .post(
+      `${url}/api/user`,
+      {
+        email: user.email,
+        role: user.role,
+        userId: user.userId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token || ""}`,
+        },
+      },
+    )
     .then((res) => res.data);
