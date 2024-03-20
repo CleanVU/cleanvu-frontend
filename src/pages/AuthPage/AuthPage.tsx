@@ -20,7 +20,6 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { createUser } from "../../api/api";
 import { Role, User } from "../../interfaces/user.interface";
-import { useUserContext } from "../../context/user.context";
 
 const AuthPage = () => {
   const [type, toggle] = useToggle(["login", "register", "registerCode"]);
@@ -36,7 +35,6 @@ const AuthPage = () => {
   } = useSignIn();
   const { signOut, getToken } = useAuth();
   const navigate = useNavigate();
-  const { setCurrentUser } = useUserContext();
 
   const form: any = useForm({
     initialValues: {
@@ -78,10 +76,6 @@ const AuthPage = () => {
     mutationKey: ["users"],
     mutationFn: async (user: User & { userId: string }) =>
       createUser(user, await getToken()),
-    onSuccess: (data: User) => {
-      setCurrentUser(data);
-      navigate("/dashboard");
-    },
   });
 
   /**************** Form submit **************/
@@ -206,15 +200,22 @@ const AuthPage = () => {
         // handle the error
         console.log(JSON.stringify(completeSignUp, null, 2));
       } else {
-        // set the user as active and navigate to the home page
-        await setSignUpActive({ session: completeSignUp.createdSessionId });
-
         // create the user in the database
-        createUserMutation.mutate({
-          email: signUp.emailAddress as string,
-          role: Role.STUDENT,
-          userId: completeSignUp.createdUserId as string,
-        });
+        createUserMutation.mutate(
+          {
+            email: signUp.emailAddress as string,
+            role: Role.STUDENT,
+            userId: completeSignUp.createdUserId as string,
+          },
+          {
+            onSuccess: async () => {
+              // set active
+              await setSignUpActive({
+                session: completeSignUp.createdSessionId,
+              });
+            },
+          },
+        );
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {

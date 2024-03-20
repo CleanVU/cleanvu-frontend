@@ -1,4 +1,4 @@
-import { UserButton, useUser } from "@clerk/clerk-react";
+import { UserButton, useAuth, useUser } from "@clerk/clerk-react";
 import { faBroom, faEnvelope, faHome } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -11,47 +11,70 @@ import {
   Stack,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Role } from "../interfaces/user.interface";
+import { useQuery } from "@tanstack/react-query";
+import { getUserByEmail } from "../api/api";
+import Loading from "../components/Loading/Loading";
+import { useUserContext } from "../context/user.context";
+
+const studentSidebar = [
+  { label: "Dashboard", link: "/dashboard", icon: faHome },
+  {
+    label: "Requests",
+    link: "/requests",
+    icon: faEnvelope,
+  },
+];
+
+const custodianSidebar = [
+  { label: "Dashboard", link: "/dashboard", icon: faHome },
+  {
+    label: "Requests",
+    link: "/custodian-requests",
+    icon: faBroom,
+  },
+];
+
+const adminSidebar = [
+  { label: "Dashboard", link: "/dashboard", icon: faHome },
+  {
+    label: "All Requests",
+    link: "/requests",
+    icon: faEnvelope,
+  },
+  {
+    label: "Custodian View",
+    link: "/custodian-requests",
+    icon: faBroom,
+  },
+];
 
 const App = () => {
   const [opened, { toggle }] = useDisclosure();
   const [active, setActive] = useState(0);
   const navigate = useNavigate();
   const { user } = useUser();
+  const { getToken } = useAuth();
+  const { setCurrentUser } = useUserContext();
 
-  const studentSidebar = [
-    { label: "Dashboard", link: "/dashboard", icon: faHome },
-    {
-      label: "Requests",
-      link: "/requests",
-      icon: faEnvelope,
-    },
-  ];
+  const { data: userData, isLoading: userLoading } = useQuery({
+    queryKey: ["user"],
+    queryFn: async () =>
+      getUserByEmail(
+        user?.primaryEmailAddress?.emailAddress as string | "",
+        await getToken(),
+      ),
+    enabled: !!user?.primaryEmailAddress?.emailAddress,
+  });
 
-  const custodianSidebar = [
-    { label: "Dashboard", link: "/dashboard", icon: faHome },
-    {
-      label: "Requests",
-      link: "/custodian-requests",
-      icon: faBroom,
-    },
-  ];
-
-  const adminSidebar = [
-    { label: "Dashboard", link: "/dashboard", icon: faHome },
-    {
-      label: "All Requests",
-      link: "/requests",
-      icon: faEnvelope,
-    },
-    {
-      label: "Custodian View",
-      link: "/custodian-requests",
-      icon: faBroom,
-    },
-  ];
+  // Set the current user in the context
+  useEffect(() => {
+    if (userData) {
+      setCurrentUser(userData);
+    }
+  }, [userData]);
 
   const sidebarTabs =
     user?.publicMetadata.role == Role.STUDENT
@@ -59,8 +82,6 @@ const App = () => {
       : user?.publicMetadata.role == Role.CUSTODIAN
         ? custodianSidebar
         : adminSidebar;
-
-  console.log(user?.publicMetadata.role);
 
   const navigateToPage = (path: string) => {
     navigate(path);
@@ -171,7 +192,7 @@ const App = () => {
         </Group>
       </AppShell.Navbar>
       <AppShell.Main>
-        <Outlet />
+        {userLoading || !userData ? <Loading /> : <Outlet />}
       </AppShell.Main>
     </AppShell>
   );

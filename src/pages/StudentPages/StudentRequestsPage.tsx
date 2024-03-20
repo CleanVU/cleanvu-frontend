@@ -37,8 +37,6 @@ const StudentRequestsPage = () => {
   const { currentUser } = useUserContext();
   const { getToken } = useAuth();
 
-  console.log(currentUser);
-
   /************** Hooks **************/
   const {
     data: requests,
@@ -48,6 +46,7 @@ const StudentRequestsPage = () => {
     queryKey: ["requests"],
     queryFn: async () =>
       getRequestsByUserId(currentUser?._id || "", 1, 1000, await getToken()),
+    enabled: !!currentUser?._id,
   });
 
   useEffect(() => {
@@ -59,6 +58,8 @@ const StudentRequestsPage = () => {
       setCurrentRequests(requests);
     }
   }, [status]);
+
+  console.log(currentUser);
 
   /************** Render **************/
   if (isLoading || !requests) return <div>Loading...</div>;

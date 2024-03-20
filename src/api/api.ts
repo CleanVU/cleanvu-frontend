@@ -2,10 +2,8 @@ import axios from "axios";
 import { Building } from "../interfaces/building.interface";
 import { Request } from "../interfaces/request.interface";
 import { User } from "../interfaces/user.interface";
-const url = "http://localhost:8081";
 
 /************** Building API Calls **************/
-
 /**
  * Get Building
  *
@@ -19,11 +17,14 @@ export const getBuildings = (
   token?: string | null,
 ): Promise<Building[]> =>
   axios
-    .get(`${url}/api/buildings?count=${count}&page=${page}`, {
-      headers: {
-        Authorization: `Bearer ${token || ""}`,
+    .get(
+      `${import.meta.env.VITE_HOST}/api/buildings?count=${count}&page=${page}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token || ""}`,
+        },
       },
-    })
+    )
     .then((res) => res.data);
 
 /************** Request API Calls **************/
@@ -41,11 +42,14 @@ export const getRequests = (
   token?: string | null,
 ): Promise<Request[]> =>
   axios
-    .get(`${url}/api/requests?count=${count}&page=${page}`, {
-      headers: {
-        Authorization: `Bearer ${token || ""}`,
+    .get(
+      `${import.meta.env.VITE_HOST}/api/requests?count=${count}&page=${page}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token || ""}`,
+        },
       },
-    })
+    )
     .then((res) => res.data);
 
 /**
@@ -59,7 +63,7 @@ export const deleteRequest = (
   token?: string | null,
 ): Promise<Request> =>
   axios
-    .delete(`${url}/api/request/${id}`, {
+    .delete(`${import.meta.env.VITE_HOST}/api/request/${id}`, {
       headers: {
         Authorization: `Bearer ${token || ""}`,
       },
@@ -86,7 +90,7 @@ export const updateRequest = (
   token?: string | null,
 ): Promise<Request> =>
   axios
-    .put(`${url}/api/request/${id}`, request, {
+    .put(`${import.meta.env.VITE_HOST}/api/request/${id}`, request, {
       headers: {
         Authorization: `Bearer ${token || ""}`,
       },
@@ -108,7 +112,7 @@ export const createRequest = (request: {
   token?: string | null;
 }): Promise<Request> =>
   axios
-    .post(`${url}/api/request`, request, {
+    .post(`${import.meta.env.VITE_HOST}/api/request`, request, {
       headers: {
         Authorization: `Bearer ${request.token || ""}`,
       },
@@ -128,11 +132,14 @@ export const getRequestsByUserId = (
   token?: string | null,
 ): Promise<Request[]> =>
   axios
-    .get(`${url}/api/requests/${userId}?count=${count}&page=${page}`, {
-      headers: {
-        Authorization: `Bearer ${token || ""}`,
+    .get(
+      `${import.meta.env.VITE_HOST}/api/requests/${userId}?count=${count}&page=${page}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token || ""}`,
+        },
       },
-    })
+    )
     .then((res) => res.data);
 
 /************** Location API Calls **************/
@@ -149,11 +156,14 @@ export const getLocations = (
   token?: string | null,
 ) =>
   axios
-    .get(`${url}/api/locations?count=${count}&page=${page}`, {
-      headers: {
-        Authorization: `Bearer ${token || ""}`,
+    .get(
+      `${import.meta.env.VITE_HOST}/api/locations?count=${count}&page=${page}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token || ""}`,
+        },
       },
-    })
+    )
     .then((res) => res.data);
 
 /************** User API Calls **************/
@@ -165,7 +175,16 @@ export const getLocations = (
  */
 export const getUser = (id: string, token?: string | null) =>
   axios
-    .get(`${url}/api/user/${id}`, {
+    .get(`${import.meta.env.VITE_HOST}/api/user/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token || ""}`,
+      },
+    })
+    .then((res) => res.data);
+
+export const getUserByEmail = (email: string, token?: string | null) =>
+  axios
+    .get(`${import.meta.env.VITE_HOST}/api/user?email=${email}`, {
       headers: {
         Authorization: `Bearer ${token || ""}`,
       },
@@ -184,7 +203,7 @@ export const createUser = (
 ) =>
   axios
     .post(
-      `${url}/api/user`,
+      `${import.meta.env.VITE_HOST}/api/user`,
       {
         email: user.email,
         role: user.role,

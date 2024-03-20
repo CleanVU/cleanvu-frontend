@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { createRequest, getBuildings, getLocations } from "../api/api";
 import { useRequestContext } from "../context/request.context";
@@ -21,6 +21,7 @@ const AddRequestModal = ({
   /************** State and Context **************/
   const { addRequestContext } = useRequestContext();
   const { getToken } = useAuth();
+  const queryClient = useQueryClient();
   const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(
     null,
   );
@@ -63,6 +64,9 @@ const AddRequestModal = ({
         location: selectedLocation,
         building: selectedBuilding,
       } as Request);
+      queryClient.invalidateQueries({
+        queryKey: ["requests"],
+      });
       close();
     },
   });
