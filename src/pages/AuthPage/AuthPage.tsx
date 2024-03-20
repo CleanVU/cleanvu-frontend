@@ -21,10 +21,6 @@ import { useMutation } from "@tanstack/react-query";
 import { createUser } from "../../api/api";
 import { Role, User } from "../../interfaces/user.interface";
 import { useUserContext } from "../../context/user.context";
-import {
-  removeValueFromLocalStorage,
-  setValueToLocalStorage,
-} from "../../util/storage.util";
 
 const AuthPage = () => {
   const [type, toggle] = useToggle(["login", "register", "registerCode"]);
@@ -38,9 +34,9 @@ const AuthPage = () => {
     signIn,
     setActive: setSignInActive,
   } = useSignIn();
-  const { signOut } = useAuth();
+  const { signOut, getToken } = useAuth();
   const navigate = useNavigate();
-  const { currentUser, setCurrentUser } = useUserContext();
+  const { setCurrentUser } = useUserContext();
 
   const form: any = useForm({
     initialValues: {
@@ -80,14 +76,10 @@ const AuthPage = () => {
     User & { userId: string }
   >({
     mutationKey: ["users"],
-    mutationFn: (user: User & { userId: string }) => createUser(user),
+    mutationFn: async (user: User & { userId: string }) =>
+      createUser(user, await getToken()),
     onSuccess: (data: User) => {
-      console.log("setting current user", data);
       setCurrentUser(data);
-      setValueToLocalStorage("accountEmail", data.email);
-      setValueToLocalStorage("accountRole", data.role);
-      console.log("User created", data);
-      console.log(currentUser);
       navigate("/dashboard");
     },
   });
@@ -192,8 +184,6 @@ const AuthPage = () => {
       ) {
         console.log("session already exists");
         await signOut();
-        removeValueFromLocalStorage("accountEmail");
-        removeValueFromLocalStorage("accountRole");
         await onSubmitSignUp(signUpData);
       }
     }

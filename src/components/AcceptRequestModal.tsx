@@ -11,6 +11,7 @@ import { DateTimePicker } from "@mantine/dates";
 import { useState } from "react";
 import { updateRequest } from "../api/api";
 import { useMutation } from "@tanstack/react-query";
+import { useAuth } from "@clerk/clerk-react";
 
 interface AcceptRequestModalProps {
   opened: boolean;
@@ -26,19 +27,24 @@ const AcceptRequestModal = ({
   /************** State and Context **************/
   const { updateRequestContext } = useRequestContext();
   const [estimate, setEstimate] = useState<Date | null>(null);
+  const { getToken } = useAuth();
 
   /************** Hooks **************/
   const acceptRequestMutation = useMutation<Request>({
     mutationKey: ["requests"],
-    mutationFn: () =>
-      updateRequest(request._id, {
-        studentId: request.studentId,
-        description: request.description,
-        status: RequestStatus.ACCEPTED,
-        locationId: (request.location as Location)._id,
-        buildingId: (request.building as Building)._id,
-        estimatedCompletion: estimate?.toISOString() || "",
-      }),
+    mutationFn: async () =>
+      updateRequest(
+        request._id,
+        {
+          studentId: request.studentId,
+          description: request.description,
+          status: RequestStatus.ACCEPTED,
+          locationId: (request.location as Location)._id,
+          buildingId: (request.building as Building)._id,
+          estimatedCompletion: estimate?.toISOString() || "",
+        },
+        await getToken(),
+      ),
     onSuccess: (data: Request) => {
       updateRequestContext(request._id, {
         ...data,

@@ -7,12 +7,13 @@ import App from "../layout/App";
 import AuthPage from "../pages/AuthPage/AuthPage";
 import StudentRequestsPage from "../pages/StudentPages/StudentRequestsPage";
 import CustodianRequestsPage from "../pages/CustodianPages/CustodianRequestsPage";
-import { SignedIn, SignedOut } from "@clerk/clerk-react";
+import { SignedIn, SignedOut, useAuth, useUser } from "@clerk/clerk-react";
 import StudentDashboardPage from "../pages/StudentPages/StudentDashboardPage";
-import { useUserContext } from "../context/user.context";
-import { getValueFromLocalStorage } from "../util/storage.util";
+import { useEffect } from "react";
+import styles from "./router.module.css";
+import Loading from "../components/Loading/Loading";
 
-const protectedRouter = createBrowserRouter([
+const protectedAdminRouter = createBrowserRouter([
   {
     path: "/",
     element: <App />,
@@ -71,26 +72,40 @@ const protectedCustodianRouter = createBrowserRouter([
   },
 ]);
 
-const getRoutes = (role: string) => {
-  switch (role) {
-    case "student":
-      return protectedStudentRouter;
-    case "custodian":
-      return protectedCustodianRouter;
-    default:
-      return protectedRouter;
-  }
-};
-
 const Router = () => {
-  const { currentUser } = useUserContext();
-  const role =
-    currentUser?.role || getValueFromLocalStorage("accountRole") || undefined;
+  /************* HOOKS *************/
+  const { user, isLoaded } = useUser();
+  const { signOut } = useAuth();
+
+  /************* SIDE EFFECTS *************/
+  // If the user is loaded and doesn't have a role, sign out which will redirect them to the sign-in page
+  useEffect(() => {
+    if (isLoaded && !user?.publicMetadata.role) {
+      signOut();
+    }
+  }, [isLoaded, user]);
+
+  /************** RENDER **************/
+  if (!isLoaded) {
+    return (
+      <div className={styles.loadingContainer}>
+        <Loading />
+      </div>
+    );
+  }
 
   return (
     <>
       <SignedIn>
-        <RouterProvider router={getRoutes(role || "")} />
+        {user?.publicMetadata.role === "admin" && (
+          <RouterProvider router={protectedAdminRouter} />
+        )}
+        {user?.publicMetadata.role === "student" && (
+          <RouterProvider router={protectedStudentRouter} />
+        )}
+        {user?.publicMetadata.role === "custodian" && (
+          <RouterProvider router={protectedCustodianRouter} />
+        )}
       </SignedIn>
       <SignedOut>
         <RouterProvider router={unprotectedRouter} />

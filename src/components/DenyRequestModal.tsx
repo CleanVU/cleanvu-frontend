@@ -9,6 +9,7 @@ import { Location } from "../interfaces/location.interface";
 import { Building } from "../interfaces/building.interface";
 import { updateRequest } from "../api/api";
 import { useMutation } from "@tanstack/react-query";
+import { useAuth } from "@clerk/clerk-react";
 
 interface DenyRequestModalProps {
   opened: boolean;
@@ -23,19 +24,24 @@ const DenyRequestModal = ({
 }: DenyRequestModalProps) => {
   /************** State and Context **************/
   const { updateRequestContext } = useRequestContext();
+  const { getToken } = useAuth();
 
   /************** Hooks **************/
   const denyRequestMutation = useMutation<Request>({
     mutationKey: ["requests"],
-    mutationFn: () =>
-      updateRequest(request._id, {
-        studentId: request.studentId,
-        description: request.description,
-        status: RequestStatus.DENIED,
-        locationId: (request.location as Location)._id,
-        buildingId: (request.building as Building)._id,
-        estimatedCompletion: "",
-      }),
+    mutationFn: async () =>
+      updateRequest(
+        request._id,
+        {
+          studentId: request.studentId,
+          description: request.description,
+          status: RequestStatus.DENIED,
+          locationId: (request.location as Location)._id,
+          buildingId: (request.building as Building)._id,
+          estimatedCompletion: "",
+        },
+        await getToken(),
+      ),
     onSuccess: (data: Request) => {
       updateRequestContext(request._id, {
         ...data,

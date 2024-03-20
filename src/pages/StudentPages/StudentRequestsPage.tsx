@@ -23,6 +23,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import AddRequestModal from "../../components/AddRequestModal";
 import { useUserContext } from "../../context/user.context";
 import { getRequestsByUserId } from "../../api/api";
+import { useAuth } from "@clerk/clerk-react";
 
 const StudentRequestsPage = () => {
   /************** State and Context **************/
@@ -34,6 +35,7 @@ const StudentRequestsPage = () => {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [addRequestOpen, setAddRequestOpen] = useState(false);
   const { currentUser } = useUserContext();
+  const { getToken } = useAuth();
 
   console.log(currentUser);
 
@@ -44,7 +46,8 @@ const StudentRequestsPage = () => {
     status,
   } = useQuery<Request[]>({
     queryKey: ["requests"],
-    queryFn: () => getRequestsByUserId(currentUser?._id || "", 1, 1000),
+    queryFn: async () =>
+      getRequestsByUserId(currentUser?._id || "", 1, 1000, await getToken()),
   });
 
   useEffect(() => {
@@ -56,8 +59,6 @@ const StudentRequestsPage = () => {
       setCurrentRequests(requests);
     }
   }, [status]);
-
-  console.log(currentRequests);
 
   /************** Render **************/
   if (isLoading || !requests) return <div>Loading...</div>;

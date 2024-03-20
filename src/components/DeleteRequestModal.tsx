@@ -3,6 +3,7 @@ import { useRequestContext } from "../context/request.context";
 import { useMutation } from "@tanstack/react-query";
 import { deleteRequest } from "../api/api";
 import { Request } from "../interfaces/request.interface";
+import { useAuth } from "@clerk/clerk-react";
 
 interface DeleteRequestModalProps {
   opened: boolean;
@@ -17,11 +18,12 @@ const DeleteRequestModal = ({
 }: DeleteRequestModalProps) => {
   /************** Context **************/
   const { deleteRequestContext } = useRequestContext();
+  const { getToken } = useAuth();
 
   /************** Hooks **************/
   const deleteRequestMutation = useMutation<Request>({
     mutationKey: ["requests"],
-    mutationFn: () => deleteRequest(requestId),
+    mutationFn: async () => deleteRequest(requestId, await getToken()),
     onSuccess: () => {
       deleteRequestContext(requestId);
       close();

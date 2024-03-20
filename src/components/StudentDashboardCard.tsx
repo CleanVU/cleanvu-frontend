@@ -15,6 +15,7 @@ import {
   RequestStatus,
   RequestStatusColors,
 } from "../interfaces/request.interface";
+import { useAuth } from "@clerk/clerk-react";
 
 interface StudentDashboardCardProps {
   userId: string;
@@ -23,6 +24,7 @@ interface StudentDashboardCardProps {
 const StudentDashboardCard = ({ userId }: StudentDashboardCardProps) => {
   /************** State and Context **************/
   const { currentRequests, setCurrentRequests } = useRequestContext();
+  const { getToken } = useAuth();
 
   /************** Hooks **************/
   const {
@@ -31,7 +33,7 @@ const StudentDashboardCard = ({ userId }: StudentDashboardCardProps) => {
     status,
   } = useQuery<Request[]>({
     queryKey: ["requests"],
-    queryFn: () => getRequestsByUserId(userId, 1, 1000),
+    queryFn: async () => getRequestsByUserId(userId, 1, 1000, await getToken()),
   });
 
   useEffect(() => {

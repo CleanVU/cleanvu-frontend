@@ -19,10 +19,12 @@ import { getRequests } from "../../api/api";
 import { useRequestContext } from "../../context/request.context";
 import { useQuery } from "@tanstack/react-query";
 import { Request } from "../../interfaces/request.interface";
+import { useAuth } from "@clerk/clerk-react";
 
 const CustodianRequestsPage = () => {
   /************** State and Context **************/
   const { currentRequests, setCurrentRequests } = useRequestContext();
+  const { getToken } = useAuth();
   const { setCurrentTab } = useNavigationContext();
   const [filterStatus, setFilterStatus] = useState<string | undefined>(
     RequestStatus.ALL,
@@ -36,7 +38,7 @@ const CustodianRequestsPage = () => {
     status,
   } = useQuery<Request[]>({
     queryKey: ["requests"],
-    queryFn: () => getRequests(10, 1),
+    queryFn: async () => getRequests(10, 1, await getToken()),
   });
 
   useEffect(() => {

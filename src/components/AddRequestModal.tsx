@@ -6,6 +6,7 @@ import { Building } from "../interfaces/building.interface";
 import { Location } from "../interfaces/location.interface";
 import { Request, RequestStatus } from "../interfaces/request.interface";
 import { Button, Modal, Select, Stack, Textarea, Text } from "@mantine/core";
+import { useAuth } from "@clerk/clerk-react";
 
 interface AddRequestModalProps {
   opened: boolean;
@@ -19,6 +20,7 @@ const AddRequestModal = ({
 }: AddRequestModalProps) => {
   /************** State and Context **************/
   const { addRequestContext } = useRequestContext();
+  const { getToken } = useAuth();
   const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(
     null,
   );
@@ -33,25 +35,26 @@ const AddRequestModal = ({
     Building[]
   >({
     queryKey: ["buildings"],
-    queryFn: () => getBuildings(10, 1),
+    queryFn: async () => getBuildings(10, 1, await getToken()),
   });
 
   const { data: locations, isLoading: isLoadingLocations } = useQuery<
     Location[]
   >({
     queryKey: ["locations"],
-    queryFn: () => getLocations(10, 1),
+    queryFn: async () => getLocations(10, 1, await getToken()),
   });
 
   const createRequestMutation = useMutation<Request>({
     mutationKey: ["requests"],
-    mutationFn: () =>
+    mutationFn: async () =>
       createRequest({
         studentId: studentId,
         description: description,
         status: RequestStatus.REQUESTED,
         locationId: selectedLocation?._id || "",
         buildingId: selectedBuilding?._id || "",
+        token: await getToken(),
       }),
     onSuccess: (data: Request) => {
       addRequestContext({

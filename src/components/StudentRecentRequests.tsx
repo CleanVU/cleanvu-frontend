@@ -19,6 +19,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Location } from "../interfaces/location.interface";
 import { Building } from "../interfaces/building.interface";
+import { useAuth } from "@clerk/clerk-react";
 
 interface StudentRecentRequestsProps {
   userId: string;
@@ -30,6 +31,7 @@ const StudentRecentRequests = ({ userId }: StudentRecentRequestsProps) => {
   const [addRequestOpen, setAddRequestOpen] = useState(false);
   const [page] = useState(1);
   const [count] = useState(3);
+  const { getToken } = useAuth();
 
   /************** Hooks **************/
   const {
@@ -38,7 +40,8 @@ const StudentRecentRequests = ({ userId }: StudentRecentRequestsProps) => {
     status,
   } = useQuery<Request[]>({
     queryKey: ["requests", page, count],
-    queryFn: () => getRequestsByUserId(userId, page, count),
+    queryFn: async () =>
+      getRequestsByUserId(userId, page, count, await getToken()),
   });
 
   useEffect(() => {
