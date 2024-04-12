@@ -34,6 +34,7 @@ const StudentDashboardCard = ({ userId }: StudentDashboardCardProps) => {
   } = useQuery<Request[]>({
     queryKey: ["requests"],
     queryFn: async () => getRequestsByUserId(userId, 1, 1000, await getToken()),
+    enabled: !!userId,
   });
 
   useEffect(() => {

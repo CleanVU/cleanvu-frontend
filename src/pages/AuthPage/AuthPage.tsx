@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { createUser } from "../../api/api";
 import { Role, User } from "../../interfaces/user.interface";
+import { useEffect } from "react";
 
 const AuthPage = () => {
   const [type, toggle] = useToggle(["login", "register", "registerCode"]);
@@ -223,6 +224,15 @@ const AuthPage = () => {
       console.error(JSON.stringify(err, null, 2));
     }
   };
+
+  useEffect(() => {
+    const signOutUser = async () => {
+      await signOut();
+    };
+
+    // sign out the user if they are already signed in when you go to the sign in page
+    signOutUser();
+  }, []);
 
   return (
     <div className={styles.pageContainer}>
