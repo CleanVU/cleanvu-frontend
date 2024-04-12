@@ -1,14 +1,14 @@
+import Router from "./router/router.tsx";
+import { NavigationProvider } from "./context/navigation.context.tsx";
+import { RequestProvider } from "./context/request.context.tsx";
+import { UserProvider } from "./context/user.context.tsx";
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Router from "./router/router.tsx";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import { createTheme, MantineProvider } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { NavigationProvider } from "./context/navigation.context.tsx";
-import { RequestProvider } from "./context/request.context.tsx";
 import { ClerkProvider } from "@clerk/clerk-react";
-import { UserProvider } from "./context/user.context.tsx";
 
 const theme = createTheme({
   fontFamily: "Poppins, sans-serif",

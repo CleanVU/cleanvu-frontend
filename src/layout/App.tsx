@@ -1,3 +1,8 @@
+import styles from "./App.module.css";
+import { Role } from "../interfaces/user.interface";
+import { getUserByEmail } from "../api/api";
+import Loading from "../components/Loading/Loading";
+import { useUserContext } from "../context/user.context";
 import { UserButton, useAuth, useUser } from "@clerk/clerk-react";
 import { faBroom, faEnvelope, faHome } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,12 +18,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { Role } from "../interfaces/user.interface";
 import { useQuery } from "@tanstack/react-query";
-import { getUserByEmail } from "../api/api";
-import Loading from "../components/Loading/Loading";
-import { useUserContext } from "../context/user.context";
-import styles from "./App.module.css";
 
 const studentSidebar = [
   { label: "Dashboard", link: "/dashboard", icon: faHome },

@@ -1,3 +1,7 @@
+import EditRequestModal from "./EditRequestModal";
+import DeleteRequestModal from "./DeleteRequestModal";
+import styles from "./StudentRequestCard.module.css";
+import { RequestStatusColors } from "../interfaces/request.interface";
 import {
   Card,
   Text,
@@ -10,15 +14,12 @@ import {
   Divider,
   Image,
 } from "@mantine/core";
-import { Location } from "../interfaces/location.interface";
-import { Building } from "../interfaces/building.interface";
-import { Request, RequestStatusColors } from "../interfaces/request.interface";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
-import EditRequestModal from "./EditRequestModal";
-import DeleteRequestModal from "./DeleteRequestModal";
 import { useDisclosure } from "@mantine/hooks";
-import styles from "./StudentRequestCard.module.css";
+import type { Request } from "../interfaces/request.interface";
+import type { Building } from "../interfaces/building.interface";
+import type { Location } from "../interfaces/location.interface";
 
 /**
  * A card that displays a request

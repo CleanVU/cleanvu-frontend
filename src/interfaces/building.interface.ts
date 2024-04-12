@@ -1,4 +1,4 @@
-import { Location } from "./location.interface";
+import type { Location } from "./location.interface";
 
 /**
  * Building Interface

@@ -1,4 +1,4 @@
-import { Request } from "./request.interface";
+import type { Request } from "./request.interface";
 
 /**
  * Location Interface

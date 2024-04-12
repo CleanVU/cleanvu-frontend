@@ -277,7 +277,7 @@ const AuthPage = () => {
                 <TextInput
                   required
                   label="Email"
-                  placeholder="hello@mantine.dev"
+                  placeholder="hello@vanderbilt.edu"
                   value={form.values.email}
                   onChange={(event) =>
                     form.setFieldValue("email", event.currentTarget.value)

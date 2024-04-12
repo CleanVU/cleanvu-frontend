@@ -1,3 +1,4 @@
+/* eslint-disable autofix/no-unused-vars */
 /**
  * User Interface
  * @interface User
