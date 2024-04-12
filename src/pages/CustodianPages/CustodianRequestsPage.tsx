@@ -73,9 +73,6 @@ const CustodianRequestsPage = () => {
       })
     : [];
 
-  console.log(requests);
-  console.log(filteredRequests);
-
   return (
     <div>
       <Group justify="flex-start" pb={10}>

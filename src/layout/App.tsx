@@ -18,6 +18,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getUserByEmail } from "../api/api";
 import Loading from "../components/Loading/Loading";
 import { useUserContext } from "../context/user.context";
+import styles from "./App.module.css";
 
 const studentSidebar = [
   { label: "Dashboard", link: "/dashboard", icon: faHome },
@@ -103,6 +104,7 @@ const App = () => {
       <AppShell.Header
         style={{
           border: 0,
+          backgroundColor: "#CFAE70",
         }}
       >
         <Group
@@ -117,9 +119,14 @@ const App = () => {
         >
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
           <Group>
-            <Title order={1} fw={500}>
+            <Title order={1} fw={500} className={styles.title}>
               CleanVU
             </Title>
+            <Text size="xs" className={styles.subtitle}>
+              {user?.publicMetadata.role === Role.STUDENT
+                ? "Student Home"
+                : "Custodian Home"}
+            </Text>
           </Group>
         </Group>
       </AppShell.Header>

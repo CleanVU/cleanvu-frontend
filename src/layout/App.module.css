@@ -1,0 +1,11 @@
+.title {
+  font-size: 1.5em;
+  color: #ffffff;
+  font-weight: bold !important;
+}
+
+.subtitle {
+  font-size: 0.75rem;
+  color: #ffffff;
+  font-weight: 300 !important;
+}

@@ -10,9 +10,8 @@ import {
   Title,
 } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-import { getRequestsByUserId } from "../api/api";
-import { useRequestContext } from "../context/request.context";
+import { useState } from "react";
+import { getRequests } from "../api/api";
 import { Request, RequestStatusColors } from "../interfaces/request.interface";
 import AddRequestModal from "./AddRequestModal";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -25,33 +24,19 @@ interface StudentRecentRequestsProps {
   userId: string;
 }
 
-const StudentRecentRequests = ({ userId }: StudentRecentRequestsProps) => {
+const CustodianRecentRequests = ({ userId }: StudentRecentRequestsProps) => {
   /************** State and Context **************/
-  const { currentRequests, setCurrentRequests } = useRequestContext();
   const [addRequestOpen, setAddRequestOpen] = useState(false);
-  const [page] = useState(1);
-  const [count] = useState(3);
   const { getToken } = useAuth();
 
   /************** Hooks **************/
-  const {
-    data: userRequests,
-    isLoading,
-    status,
-  } = useQuery<Request[]>({
-    queryKey: ["requests", page, count],
-    queryFn: async () =>
-      getRequestsByUserId(userId, page, count, await getToken()),
+  const { data: userRequests, isLoading } = useQuery<Request[]>({
+    queryKey: ["requests"],
+    queryFn: async () => getRequests(1000, 1, await getToken()),
   });
 
-  useEffect(() => {
-    if (status === "success" && userRequests) {
-      setCurrentRequests(userRequests);
-    }
-  }, [status]);
-
   /************** Render **************/
-  const recentRequests = currentRequests?.slice(0, 4);
+  const recentRequests = userRequests?.slice(0, 4);
 
   if (isLoading || !userRequests) return <div>Loading...</div>;
 
@@ -159,4 +144,4 @@ const StudentRecentRequests = ({ userId }: StudentRecentRequestsProps) => {
   );
 };
 
-export default StudentRecentRequests;
+export default CustodianRecentRequests;

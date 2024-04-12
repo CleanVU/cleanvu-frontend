@@ -8,6 +8,7 @@ import {
   ActionIcon,
   Title,
   Divider,
+  Image,
 } from "@mantine/core";
 import { Location } from "../interfaces/location.interface";
 import { Building } from "../interfaces/building.interface";
@@ -17,6 +18,7 @@ import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import EditRequestModal from "./EditRequestModal";
 import DeleteRequestModal from "./DeleteRequestModal";
 import { useDisclosure } from "@mantine/hooks";
+import styles from "./StudentRequestCard.module.css";
 
 /**
  * A card that displays a request
@@ -35,33 +37,48 @@ const StudentRequestCard = ({ request }: { request: Request }) => {
 
   return (
     <div>
-      <Card padding="xl" radius="md" withBorder>
+      <Card
+        padding="xl"
+        radius="md"
+        withBorder
+        style={{
+          borderColor: "#9c9c9c",
+        }}
+      >
+        <Card.Section>
+          <Image src={"src/assets/roth.jpg"} alt="Request Image" height={200} />
+        </Card.Section>
         <Card.Section>
           <Group justify="space-between" mt="md" mb="xs" ml="xs" mr="xs">
-            <Group gap={5}>
-              <Title order={4} fw={400}>
-                Request for
-              </Title>
-              <Title
-                order={4}
-              >{` ${(request.location as Location).description}`}</Title>
-              <Title
-                order={6}
-                fw={200}
-                style={{
-                  paddingTop: "2px",
-                }}
-              >{`(${new Date(request.createdAt).toLocaleString()})`}</Title>
-            </Group>
-            <Badge
-              color={
-                RequestStatusColors[
-                  request.status.toUpperCase() as keyof typeof RequestStatusColors
-                ]
-              }
-            >
-              {request.status}
-            </Badge>
+            <div className={styles.requestHeader}>
+              <div className={styles.headerTopLine}>
+                <div className={styles.headerLeftTop}>
+                  <Title order={4} fw={400}>
+                    Request for
+                  </Title>
+                  <Title
+                    order={4}
+                  >{` ${(request.location as Location).description}`}</Title>
+                  <Title
+                    order={6}
+                    fw={200}
+                    style={{
+                      paddingTop: "2px",
+                    }}
+                  >{`(${new Date(request.createdAt).toLocaleString()})`}</Title>
+                </div>
+                <Badge
+                  color={
+                    RequestStatusColors[
+                      request.status.toUpperCase() as keyof typeof RequestStatusColors
+                    ]
+                  }
+                >
+                  {request.status}
+                </Badge>
+              </div>
+              <Text className={styles.description}>{request.description}</Text>
+            </div>
           </Group>
         </Card.Section>
         <Card.Section>

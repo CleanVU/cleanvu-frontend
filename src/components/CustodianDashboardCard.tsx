@@ -1,60 +1,47 @@
 import { Card, RingProgress, SimpleGrid, Text, Title } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
-import { getRequestsByUserId } from "../api/api";
-import { useRequestContext } from "../context/request.context";
+import { getRequests } from "../api/api";
 import {
   Request,
   RequestStatus,
   RequestStatusColors,
 } from "../interfaces/request.interface";
 import { useAuth } from "@clerk/clerk-react";
-import styles from "./StudentDashboardCard.module.css";
+import styles from "./CustodianDashboardCard.module.css";
 
 interface StudentDashboardCardProps {
   userId: string;
 }
 
-const StudentDashboardCard = ({ userId }: StudentDashboardCardProps) => {
+const CustodianDashboardCard = ({ userId }: StudentDashboardCardProps) => {
   /************** State and Context **************/
-  const { currentRequests, setCurrentRequests } = useRequestContext();
   const { getToken } = useAuth();
 
   /************** Hooks **************/
-  const {
-    data: userRequests,
-    isLoading,
-    status,
-  } = useQuery<Request[]>({
+  const { data: userRequests, isLoading } = useQuery<Request[]>({
     queryKey: ["requests"],
-    queryFn: async () => getRequestsByUserId(userId, 1, 1000, await getToken()),
+    queryFn: async () => getRequests(1000, 1, await getToken()),
     enabled: !!userId,
   });
 
-  useEffect(() => {
-    if (status === "success" && userRequests) {
-      setCurrentRequests(userRequests);
-    }
-  }, [status]);
-
   /************** Render **************/
-  const completedRequests = currentRequests?.filter(
+  const completedRequests = userRequests?.filter(
     (request) => request.status === RequestStatus.COMPLETED,
   );
 
-  const requestedRequests = currentRequests?.filter(
+  const requestedRequests = userRequests?.filter(
     (request) => request.status === RequestStatus.REQUESTED,
   );
 
-  const acceptedRequests = currentRequests?.filter(
+  const acceptedRequests = userRequests?.filter(
     (request) => request.status === RequestStatus.ACCEPTED,
   );
 
-  const deniedRequests = currentRequests?.filter(
+  const deniedRequests = userRequests?.filter(
     (request) => request.status === RequestStatus.DENIED,
   );
 
-  const nonDeniedRequests = currentRequests?.filter(
+  const nonDeniedRequests = userRequests?.filter(
     (request) => request.status !== RequestStatus.DENIED,
   );
 
@@ -99,13 +86,15 @@ const StudentDashboardCard = ({ userId }: StudentDashboardCardProps) => {
     },
   ];
 
+  console.log(userRequests);
+
   if (isLoading || !userRequests) return <div>Loading...</div>;
 
   return (
     <Card shadow="sm" w={"100%"}>
       <Title order={4}>{`Request Status`}</Title>
       <SimpleGrid cols={4} spacing="md">
-        {currentRequests &&
+        {userRequests &&
           sections.map((section, index) => (
             <div className={styles.ringAndText}>
               <RingProgress
@@ -117,7 +106,7 @@ const StudentDashboardCard = ({ userId }: StudentDashboardCardProps) => {
                 styles={{
                   root: {
                     width: "100%",
-                    height: "100%",
+                    height: "fit-content",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -149,4 +138,4 @@ const StudentDashboardCard = ({ userId }: StudentDashboardCardProps) => {
   );
 };
 
-export default StudentDashboardCard;
+export default CustodianDashboardCard;

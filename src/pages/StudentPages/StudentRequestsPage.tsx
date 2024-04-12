@@ -87,7 +87,7 @@ const StudentRequestsPage = () => {
     <div>
       <Group justify="space-between" pb={10}>
         <Group gap={10}>
-          <Title order={1}>{`Requests`}</Title>
+          <Title order={1}>{`Your Requests`}</Title>
           <Text
             style={{
               fontSize: "1.5rem",

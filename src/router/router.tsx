@@ -9,6 +9,7 @@ import StudentRequestsPage from "../pages/StudentPages/StudentRequestsPage";
 import CustodianRequestsPage from "../pages/CustodianPages/CustodianRequestsPage";
 import { SignedIn, SignedOut, useUser } from "@clerk/clerk-react";
 import StudentDashboardPage from "../pages/StudentPages/StudentDashboardPage";
+import CustodianDashboard from "../pages/CustodianPages/CustodianDashboardPage";
 
 const protectedAdminRouter = createBrowserRouter([
   {
@@ -59,7 +60,7 @@ const protectedCustodianRouter = createBrowserRouter([
     path: "/",
     element: <App />,
     children: [
-      { path: "/", element: <Navigate to="/custodian-requests" /> },
+      { path: "/", element: <CustodianDashboard /> },
       { path: "/custodian-requests", element: <CustodianRequestsPage /> },
     ],
   },

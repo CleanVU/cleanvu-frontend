@@ -40,7 +40,15 @@ const CustodianRequestCard = ({ request }: { request: Request }) => {
 
   return (
     <div>
-      <Card shadow="sm" padding="xl" radius="md" withBorder>
+      <Card
+        shadow="sm"
+        padding="xl"
+        radius="md"
+        withBorder
+        style={{
+          borderColor: "#9c9c9c",
+        }}
+      >
         <Card.Section>
           <Group justify="space-between" mt="md" mb="xs" ml="xs" mr="xs">
             <Group gap={5}>
