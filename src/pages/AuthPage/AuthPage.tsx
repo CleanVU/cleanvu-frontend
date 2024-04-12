@@ -243,14 +243,6 @@ const AuthPage = () => {
             <Text size="lg" fw={500}>
               Welcome to CleanVU, {type} with
             </Text>
-            <Group grow mb="md" mt="md">
-              <GoogleButton radius="xl">Google</GoogleButton>
-            </Group>
-            <Divider
-              label="Or continue with email"
-              labelPosition="center"
-              my="lg"
-            />
           </>
         )}
 
