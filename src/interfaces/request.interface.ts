@@ -1,5 +1,6 @@
-import { Location } from "./location.interface";
-import { Building } from "./building.interface";
+/* eslint-disable autofix/no-unused-vars */
+import type { Location } from "./location.interface";
+import type { Building } from "./building.interface";
 
 /**
  * Request Interface

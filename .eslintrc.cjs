@@ -13,7 +13,6 @@ module.exports = {
     "plugin:import/typescript",
     "plugin:import/errors",
     "plugin:import/warnings",
-    "plugin:storybook/recommended",
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {

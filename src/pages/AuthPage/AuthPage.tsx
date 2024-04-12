@@ -13,7 +13,6 @@ import {
 } from "@mantine/core";
 import { useToggle, upperFirst } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
-import GoogleButton from "../../components/GoogleButton/GoogleButton";
 import styles from "./AuthPage.module.css";
 import { useAuth, useSignIn, useSignUp } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";

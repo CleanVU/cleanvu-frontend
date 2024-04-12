@@ -1,15 +1,15 @@
+import App from "../layout/App";
+import AuthPage from "../pages/AuthPage/AuthPage";
+import StudentRequestsPage from "../pages/StudentPages/StudentRequestsPage";
+import CustodianRequestsPage from "../pages/CustodianPages/CustodianRequestsPage";
+import StudentDashboardPage from "../pages/StudentPages/StudentDashboardPage";
+import CustodianDashboard from "../pages/CustodianPages/CustodianDashboardPage";
+import { SignedIn, SignedOut, useUser } from "@clerk/clerk-react";
 import {
   Navigate,
   RouterProvider,
   createBrowserRouter,
 } from "react-router-dom";
-import App from "../layout/App";
-import AuthPage from "../pages/AuthPage/AuthPage";
-import StudentRequestsPage from "../pages/StudentPages/StudentRequestsPage";
-import CustodianRequestsPage from "../pages/CustodianPages/CustodianRequestsPage";
-import { SignedIn, SignedOut, useUser } from "@clerk/clerk-react";
-import StudentDashboardPage from "../pages/StudentPages/StudentDashboardPage";
-import CustodianDashboard from "../pages/CustodianPages/CustodianDashboardPage";
 
 const protectedAdminRouter = createBrowserRouter([
   {

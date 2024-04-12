@@ -1,4 +1,19 @@
 import {
+  RequestStatus,
+  RequestStatusColors,
+} from "../../interfaces/request.interface";
+import StudentRequestCard from "../../components/StudentRequestCard";
+import { useNavigationContext } from "../../context/navigation.context";
+import { StudentTabs } from "../../interfaces/user.interface";
+import { useRequestContext } from "../../context/request.context";
+import AddRequestModal from "../../components/AddRequestModal";
+import { useUserContext } from "../../context/user.context";
+import { getRequestsByUserId } from "../../api/api";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import {
   Text,
   Button,
   Group,
@@ -7,23 +22,8 @@ import {
   Divider,
   SegmentedControl,
 } from "@mantine/core";
-import {
-  Request,
-  RequestStatus,
-  RequestStatusColors,
-} from "../../interfaces/request.interface";
-import { useEffect, useState } from "react";
-import StudentRequestCard from "../../components/StudentRequestCard";
-import { useNavigationContext } from "../../context/navigation.context";
-import { StudentTabs } from "../../interfaces/user.interface";
-import { useQuery } from "@tanstack/react-query";
-import { useRequestContext } from "../../context/request.context";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import AddRequestModal from "../../components/AddRequestModal";
-import { useUserContext } from "../../context/user.context";
-import { getRequestsByUserId } from "../../api/api";
 import { useAuth } from "@clerk/clerk-react";
+import type { Request } from "../../interfaces/request.interface";
 
 const StudentRequestsPage = () => {
   /************** State and Context **************/

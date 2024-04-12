@@ -1,4 +1,14 @@
 import {
+  RequestStatus,
+  RequestStatusColors } from "../../interfaces/request.interface";
+import { useNavigationContext } from "../../context/navigation.context";
+import { CustodianTabs } from "../../interfaces/user.interface";
+import CustodianRequestCard from "../../components/CustodianRequestCard";
+import { getRequests } from "../../api/api";
+import { useRequestContext } from "../../context/request.context";
+import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import {
   Text,
   Button,
   Group,
@@ -7,19 +17,9 @@ import {
   Title,
   Divider,
 } from "@mantine/core";
-import {
-  RequestStatus,
-  RequestStatusColors,
-} from "../../interfaces/request.interface";
-import { useEffect, useState } from "react";
-import { useNavigationContext } from "../../context/navigation.context";
-import { CustodianTabs } from "../../interfaces/user.interface";
-import CustodianRequestCard from "../../components/CustodianRequestCard";
-import { getRequests } from "../../api/api";
-import { useRequestContext } from "../../context/request.context";
-import { useQuery } from "@tanstack/react-query";
-import { Request } from "../../interfaces/request.interface";
 import { useAuth } from "@clerk/clerk-react";
+import type {
+ Request } from "../../interfaces/request.interface";
 
 const CustodianRequestsPage = () => {
   /************** State and Context **************/
