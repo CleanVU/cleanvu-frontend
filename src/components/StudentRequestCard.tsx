@@ -47,7 +47,13 @@ const StudentRequestCard = ({ request }: { request: Request }) => {
         }}
       >
         <Card.Section>
-          <Image src={"src/assets/roth.jpg"} alt="Request Image" height={200} />
+          <Image
+            src={
+              "https://cdn.vanderbilt.edu/vu-web/clients/mediadisplays/4674-20221118154506-20220803JR009.jpg"
+            }
+            alt="Request Image"
+            height={200}
+          />
         </Card.Section>
         <Card.Section>
           <Group justify="space-between" mt="md" mb="xs" ml="xs" mr="xs">
